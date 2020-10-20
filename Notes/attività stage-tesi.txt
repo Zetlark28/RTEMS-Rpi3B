@@ -1,0 +1,60 @@
+Appunti per stage:
+
+FASE A - RTEMS su RPi
+1 Porting RTEMS:
+- definizione procedura di porting -> creare una guida che puo' essere replicabile. nella tesi scrivere il processo e i problemi che ho riscontrato.
+- definizione applicazione di prova di base, SENZA ECLIPSE, con alcune interfacce -> quali interfacce? UART o led GPIO, sul ticker.
+
+2 Ambiente di sviluppo per applicazione RTEMS:
+- configurazione Eclipse -> guida installazione plug-in
+- esportazione della configurazione -> in che senso?
+- procedure per realizzare un'applicazione con RTEMS -> guida? include predefiniti per il funzionamento di RTEMS?
+
+FASE B - Nella tesi discutere la differenza tra verifica e validazione:
+
+3 Requisiti di verifica:
+- elenco requisiti di verifica HD, cosa verificare e perchè? ->  cercare documentazione per RPI 3B+ e API di RTEMS
+- elenco test che soddisfano i requisiti di verifica -> come testare la RPI, invio di bit, cosa vedo ecc.
+
+4 Ambiente di prova (test set up):
+- circuiti esterni da collegare alla RPi per stimolazione e misura -> quali circuiti?
+- strumentazione di misura -> quali usare?
+
+5 Prove di verifica:
+- scrittura dei programmi di prova -> prova del'ambiente di test
+- esecuzione -> verifica dei programmi di prova e esiti?
+- rapporto di esecuzione dei test, con dati di prestazione -> creazione di un rapporto di test, abbiamo un template da seguire? FILE EXCEL
+
+FASE C - espanzione CANbus(opzionale)
+da discutere nel caso si ha tempo dopo la fase B
+
+
+ELENCO DELLE INTERFACCE DI INTERESSE
+
+- GPIO (input/output, interrupt sources? controllare se va)
+- I2C
+- SPI
+- UART
+- Opzione Ethernet? NOPE
+- Opzione USB? NOPE
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Tesi : scrivere problematiche, e errori.
+Ok nel caso 
+
+Trovare sorgenti per test di prova.
+
+Punto 3B
+noi stiamo usando UN SISTEMA OPERATIVO VALIDATO DALL'ESA.
+cosa ci faccio con sto SO, fare tante piccoli programmini per vedere se funziona l'hd 
+
+progettare i test-> come voglio verificare la scheda e le sue funzionalità.
+
+ambiente di prova : led pin tensioni. Capire che componenti mi servono.
+
+interfacce disponibili, cosa posso usare, ecc.
+
+ALTERNATIVA PARTE C -> PROGRAMMA PIU' COMPLICATO SISTEMA OPERATIVO RT.
+
+per problema di RTEMS ripingo Gianmaria.

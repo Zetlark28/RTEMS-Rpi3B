@@ -1,0 +1,38 @@
+Guida RTEMS
+
+Installazione su pc host:
+
+First, let's clone two Git repositories:
+
+Cloniamo 2 repository Git di RTEMS.
+	- RTEMS Source Builder (RSB), che semplifica il processo di building della toolchain di RTEMS.
+	- RTMES source code The tool suite for RTEMS and the RTEMS sources are tightly coupled. For example, do not use a RTEMS version 5 	 tool suite with RTEMS version 4.11 sources and viceversa.
+
+comandi da inserire nel command terminal	
+	$ mkdir -p $HOME/rtems-dev/src
+	$ cd $HOME/rtems-dev/src
+	$ git clone -b 5.1 git://git.rtems.org/rtems-source-builder.git rsb
+	$ git clone -b 5.1 git://git.rtems.org/rtems.git
+	
+installazione della tool suite
+	$ cd $HOME/rtems-dev/src/rsb/rtems
+	$ ../source-builder/sb-set-builder --prefix=$HOME/rtems-dev/rtems/5 5/rtems-arm
+
+controllo se è stato installata la toolchain
+	$HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc --version
+
+
+
+
+Note:
+mailing list users: https://lists.rtems.org/pipermail/users/
+
+similar problem: 
+https://lists.rtems.org/pipermail/users/2020-June/067680.html
+
+can't build samples:
+https://lists.rtems.org/pipermail/users/2020-May/067663.html
+
+Hi, 
+
+rtems version used is 5.1

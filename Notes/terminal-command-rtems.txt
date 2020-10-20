@@ -1,0 +1,36 @@
+
+Configurazione terminale : 
+export PATH=$HOME/rtems-dev/rtems/5/bin:"$PATH"
+
+
+
+$HOME/rtems-dev/src/rtems/configure \
+    --prefix=$HOME/rtems-dev/rtems/5 \
+    --target=arm-rtems5 \
+    --enable-rtemsbsp="raspberrypi raspberrypi2" \
+    --enable-tests=samples --enable-networking --enable-posix
+    
+    
+arm-rtems5-objcopy -Obinary $HOME/rtems-dev/build/arm-rtems5/c/raspberrypi2/testsuites/samples/ticker.exe kernel-pi2.img    
+    
+per leggere dalla seriale
+sudo minicom -b 115200 -D /dev/serial/by-id/...
+
+arm-rtems5-objcopy -Obinary /Users/clark/eclipse-workspace/rtems-exec/RTEMS\ Executable\ Configuration/test.exe kernel-hello-pi.img
+
+
+
+clean:
+make clean 
+rm -rf  ./hello.o ./init.o  ./hello.d ./init.d  hello-rpi.exe
+
+build:
+Building file: ../init.c
+Invoking: RTEMS C Compiler
+/home/clark/rtems-dev/rtems/5/bin/arm-rtems5-gcc -B/home/clark/rtems-dev/rtems/5/arm-rtems5/raspberrypi2/lib/ -specs bsp_specs -qrtems -ffunction-sections -fdata-sections -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard -mtune=cortex-a7 -Os -g -Wall -c -fmessage-length=0 -pipe -MMD -MP -MF"init.d" -MT"init.o" -o "init.o" "../init.c"
+Finished building: ../init.c
+ 
+Building target: hello-rpi.exe
+Invoking: RTEMS Linker
+/home/clark/rtems-dev/rtems/5/bin/arm-rtems5-gcc -B/home/clark/rtems-dev/rtems/5/arm-rtems5/raspberrypi2/lib/ -specs bsp_specs -qrtems -ffunction-sections -fdata-sections -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard -mtune=cortex-a7 -Wl,--gc-sections -o "hello-rpi.exe"  ./hello.o ./init.o   
+Finished building target: hello-rpi.exe

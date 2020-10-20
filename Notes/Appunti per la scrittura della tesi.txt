@@ -1,0 +1,6 @@
+Problemi riscontrati:
+
+- l'installazine della toolchain falliva -> versioni discordanti, poichè stanno sviluppando la v6
+- arm rtem5 gcc non compila l'exe correttamente -> ??
+
+

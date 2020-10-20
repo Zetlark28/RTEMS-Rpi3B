@@ -1,0 +1,39 @@
+Bozza Tesi
+
+Introduzione:
+
+Cos'è RTEMS?
+
+RTEMS sta per Real-Time Executive for Multiprocessor System ed è un Sistema Operativo Real Time OPEN SOURCE validato dall'ESA (European Space Agency).
+Questo sistema operativo è multi-thread, single address-space senza separzione tra kernel-space e user-space.
+
+L'ecosistema di RTEMS è una collegione di tools,packages, code, documentazione e contenuti online forniti dal progetto RTEMS.
+L'ecosistema fornisce un modo per sviluppare, mantenere e usare RTEMS. 
+
+Fase di installazione sul host :
+
+Dato che RTEMS è un progetto open source è in continuo sviluppo. 
+Attualmente stanno sviluppando la versione 6, ma non è ancora stabile e non è sicuro che funzioni sulla raspberrypi.
+Infatti il primo problema che è stato riscontrato era che l'installazione della tool suite andava in errore, mancavano dei file nella versione 6.
+Quindi per risolvere il problema siamo passati all'ultima versione stabile e testata su raspberrypi, cioè la versione 5.1.
+Con git abbiamo fatto il checkout del tag v 5.1 e la toolsuite viene installata con successo.
+
+Il secondo problema che poi si è riscontrato è che i programmi di test forniti da RTEMS non funzionavano sulla scheda rpi. 
+Questo perchè RTEMS non è compatibile con il firmware più aggiornato della rpi. 
+Quindi per risolvere il problema si è cercato il firmware compatibile a RTEMS, in questo modo i programmi test funzionano con successo.
+
+Il terzo problema è stato che dei file sorgenti passati da un mio collega, il file eseguibile risultante non funzionava sulla mia scheda, invece sulla sua si.
+Questo perchè dato che non abbiamo usato un repository comune per il codice di prova, mi è stato passato una versione vecchia. 
+Infatti riallineando il codice alla versione più recente, il programma funziona anche a lato mio.
+Per verificare questo disallineamento abbiamo fatto "reverse engineering". 
+Dato che il comando per la creazione del file .img era sicuramente funzionante allora si è pensato che fosse la toolchain ad avere un problema.
+E grazie al confonto dei file intermedi abbiamo notato che c'erano delle differenze, e controllando poi i file sorgenti abbiamo notato la discongruenza. 
+il compilatore di RTEMS non funziona correttamente. Il file .exe che viene generato non è corretto poichè quando si va a creare il file .img il programma non viene avviato
+e si ha come unico risultato sulla UART : "RTEMS RPi 3B+ 1.3 (1GB) [00a020d3]"
+
+Utilizzo kicad per circuito stampato
+
+Ambiente di testing:
+software sincronizzati in slot, ogni 100 ms ripetono una serie di cose , devono finire tutto entro 100 ms, c'è un pezzo dove non fanno nulla (di solito usato per accendere il led). 
+
+collaudo dell'apparato indipendentemente dagli altri. GSE 

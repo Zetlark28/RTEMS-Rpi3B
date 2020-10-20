@@ -1,0 +1,10 @@
+19/10/2020
+TODO:
+- scrivere una piccola introduzione della tesi (DONE)
+- vedere le API e provare a fare un piccolo programma
+	- accendi led
+	- hello world
+	- accensione led con ticker
+- vedere come funziona kicad
+- vedere se si possono spegnere i driver video.
+	

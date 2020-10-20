@@ -1,0 +1,19 @@
+Obiettivo tesi:
+
+-sviluppo di un applicazione RT con RTEMS su raspberry pi, documentando i passaggi fatti.
+
+Cosa è stato fatto fino adesso:
+
+-Installazione di RTEMS: attualmente stanno sviluppando la v6, mi sono spostato sul branch della v5. Ho installato RTEMS sul computer host, e ho provato ad eseguire il test ticker.exe su raspberry pi 3B+ ma al momento non funziona.
+
+-Sviluppo: Impostato il plugin su eclipse
+
+Prossimi passi:
+-Domani ho una chiamata con Giorgio per risolvere il problema sopracitato.
+-creazione di un semplice programma simil "hello world", per controllare che RTEMS e Eclipse siano ben configurati.
+-definire un applicativo per il test di alcune api che RTEMS mette a disposizione
+-analisi dell'applicativo prima dello sviluppo
+-sviluppo dell'applicativo
+-test
+
+

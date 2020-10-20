@@ -1,0 +1,124 @@
+RTEMS ambiente di test:
+
+GPIO  in Rpi 3B+ :
+https://www.raspberrypi.org/documentation/usage/gpio/
+
+I pin GPIO possono essere usati in seguente modo:
+	- PWM (pulse-width modulation) : 
+		-Software PWM available on all pins
+		-Hardware PWM available on GPIO12, GPIO13, GPIO18, GPIO19
+	-SPI:
+		-SPI0: MOSI (GPIO10); MISO (GPIO9); SCLK (GPIO11); CE0 (GPIO8), CE1 (GPIO7)
+		-SPI1: MOSI (GPIO20); MISO (GPIO19); SCLK (GPIO21); CE0 (GPIO18); CE1 (GPIO17); CE2 (GPIO16)
+	-I2C:
+		-Data: (GPIO2); Clock (GPIO3)
+		-EEPROM Data: (GPIO0); EEPROM Clock (GPIO1)
+	-Serial:
+		-TX (GPIO14); RX (GPIO15)
+	-Interrupt (OPZIONALE):
+		-GPIO 0,1,2,3,4
+
+Oltre al GPIO abbiamo a dispsizione:
+	-UART
+	
+Appunti per periferica da testare:
+
+-SPI : 
+	The base address of this SPI0 interface is 0x7E204000.
+	SPI0 ha 2 mini interfacce addizionali SPI1 e SPI2.
+	
+	
+	
+	
+Links:
+- Tutti gli indirizzi sono forniti da RTEMS :https://docs.rtems.org/doxygen/branches/master/raspberrypi_8h.html
+- API RTMES : https://docs.rtems.org/doxygen/branches/master/dir_3c294a8045e1289f8681c3e774caaa4e.html
+
+
+ELENCO DELLE INTERFACCE DI INTERESSE
+
+- GPIO (input/output, interrupt sources? controllare se va) -> OK
+- I2C -> OK
+- SPI -> OK
+- UART -> OK
+
+
+
+
+Per testare il pin GPIO general purpose:
+
+suppongo un programma dove accendo i led con un certo intervallo. Per controllare che l'intervallo venga rispettato mando un messaggio via UART 
+(ad esempio "5 sec passati ACCENDO/SPENGO LED") 
+O accendo in modo alternato 2 led per verificare il controllo di due pin insieme.
+Necessario breadboard e LED -> CHECK.
+
+Per testare I2C: 
+
+suppongo un programma dove mando un set di bit, cioè 8 bit (in un certo intervallo di tempo) , controllo di avvenuta ricezione di ogni singolo bit tramite UART.
+LCD? controllare quello che ho gia (https://www.olimex.com/Products/Duino/Shields/SHIELD-LCD16x2/open-source-hardware)
+
+Per testare SPI:
+
+suppongo un programma dove mando/ricevo un set di bit , controllo di avvenuta ricezione di ogni singolo bit tramite UART.
+come testarlo?
+
+TODO:
+Periferiche I2C e SPI da testare su Rpi 3B+
+
+
+
+Telaio alluminio , riduzione di rumore. 
+verde sono testpoint sono i pin. 
+
+dario mi manda un modulo adc, e il dac dove viene montato su una basetta che mi viene mandata.
+
+
+dac/adc - uscire dac 2 v entra adc 2v . Test point 
+mandare l'onda quadra su su un pin , interrupt al prfronte positivo , e il task manda il valore a dac 
+posso misurare il tempo di risposta.
+
+loopback -> per provare la seriale , così quando manda il tx e ritorna rx.
+
+montare il 555 su un pin e l'altro nel led, verifica accensione e. 
+555 - oscillaotre quadri -> 3v3 ?
+
+flatcable -> 2 strip contatti.
+
+millefori o kidcad.
+
+fare la millefori al momento e poi fare il circuito stampato.
+
+collegare un apparato indipendentemente dagli altri.
+
+- collaudo dell'apparato indipendentemente dagli altri. GSE 
+
+dac e adc veloci.
+
+converte il valore della tensione. Problemi di temporizzazione della conversione.
+
+all'adc 
+
+trimmer , generatore sinoidale input dac 
+
+
+
+inizia a scrivere un po' la tesi. 
+
+
+
+generatore onde quadre schema 555 , da 0.5Hz fino 100Hz .
+
+driver più corrente in ingresso che in uscita.
+
+
+
+meglio circuito stampato.
+
+driver CAN.
+
+kidcad
+
+software sincronizzati in slot, ogni 100 ms ripetono una serie di cose , devono finire tutto entro 100 ms, c'è un pezzo dove non fanno nulla (di solito usato per accendere il led). 
+
+
+
