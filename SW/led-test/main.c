@@ -14,7 +14,7 @@ rtems_task Init(
 
   printf( "\n\n*** LED BLINKER (GPIO4) -- task wake after ***" );
 
-  LED_INIT();
+  LED_INIT(4);
 
   while (1) {
 
