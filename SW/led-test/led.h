@@ -12,7 +12,7 @@
 #define GPIO_SET_EXT *(gpio+8)  // sets   bits which are 1 ignores bits which are 0
 #define GPIO_CLR_EXT *(gpio+11) // clears bits which are 1 ignores bits which are 0
 
-
+//47 = GPIO PIN 15
 #define LED_INIT()  do { unsigned int *gpio = (unsigned int *)BCM2835_GPIO_REGS_BASE; OUT_GPIO(47);} while(0)
 #define LED_ON()  do { unsigned int *gpio = (unsigned int *)BCM2835_GPIO_REGS_BASE; GPIO_CLR_EXT = 1 << (47 % 32);} while(0)
 #define LED_OFF()  do { unsigned int *gpio = (unsigned int *)BCM2835_GPIO_REGS_BASE; GPIO_SET_EXT = 1 << (47 % 32);} while(0)
