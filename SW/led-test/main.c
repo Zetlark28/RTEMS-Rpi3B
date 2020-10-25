@@ -12,16 +12,16 @@ rtems_task Init(
 {
   rtems_status_code status;
 
-  printf( "\n\n*** LED BLINKER -- task wake after ***" );
+  printf( "\n\n*** LED BLINKER (GPIO4) -- task wake after ***" );
 
   LED_INIT();
 
   while (1) {
 
     (void) rtems_task_wake_after( 1 * rtems_clock_get_ticks_per_second() );
-    LED_OFF();
+    LED_OFF(4);
     (void) rtems_task_wake_after( 1 * rtems_clock_get_ticks_per_second() );
-    LED_ON();
+    LED_ON(4);
 
   }
 

@@ -1,0 +1,193 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "Blink"
+Date ""
+Rev "1.0"
+Comp "BIS-ITALIA"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Device:R R1
+U 1 1 5F95922F
+P 3150 2350
+F 0 "R1" H 3220 2396 50  0000 L CNN
+F 1 "470" H 3220 2305 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0516_L15.5mm_D5.0mm_P20.32mm_Horizontal" V 3080 2350 50  0001 C CNN
+F 3 "~" H 3150 2350 50  0001 C CNN
+	1    3150 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 5F959E33
+P 4000 2350
+F 0 "R3" H 4070 2396 50  0000 L CNN
+F 1 "47k" H 4070 2305 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0516_L15.5mm_D5.0mm_P20.32mm_Horizontal" V 3930 2350 50  0001 C CNN
+F 3 "~" H 4000 2350 50  0001 C CNN
+	1    4000 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 5F95A3A6
+P 4450 2350
+F 0 "R4" H 4380 2304 50  0000 R CNN
+F 1 "R" H 4380 2395 50  0000 R CNN
+F 2 "Resistor_THT:R_Axial_DIN0516_L15.5mm_D5.0mm_P20.32mm_Horizontal" V 4380 2350 50  0001 C CNN
+F 3 "~" H 4450 2350 50  0001 C CNN
+	1    4450 2350
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:LED D1
+U 1 1 5F95B85C
+P 3150 2850
+F 0 "D1" V 3189 2732 50  0000 R CNN
+F 1 "LED" V 3098 2732 50  0000 R CNN
+F 2 "LED_THT:LED_D5.0mm" H 3150 2850 50  0001 C CNN
+F 3 "~" H 3150 2850 50  0001 C CNN
+	1    3150 2850
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:LED D2
+U 1 1 5F95C57A
+P 4450 2850
+F 0 "D2" V 4489 2732 50  0000 R CNN
+F 1 "LED" V 4398 2732 50  0000 R CNN
+F 2 "LED_THT:LED_D5.0mm" H 4450 2850 50  0001 C CNN
+F 3 "~" H 4450 2850 50  0001 C CNN
+	1    4450 2850
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:CP C1
+U 1 1 5F95CD09
+P 3300 3250
+F 0 "C1" V 3555 3250 50  0000 C CNN
+F 1 "10uF" V 3464 3250 50  0000 C CNN
+F 2 "Capacitor_THT:CP_Radial_D10.0mm_P5.00mm" H 3338 3100 50  0001 C CNN
+F 3 "~" H 3300 3250 50  0001 C CNN
+	1    3300 3250
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:CP C2
+U 1 1 5F95D533
+P 4250 3250
+F 0 "C2" V 3995 3250 50  0000 C CNN
+F 1 "10uF" V 4086 3250 50  0000 C CNN
+F 2 "Capacitor_THT:CP_Radial_D10.0mm_P5.00mm" H 4288 3100 50  0001 C CNN
+F 3 "~" H 4250 3250 50  0001 C CNN
+	1    4250 3250
+	0    1    1    0   
+$EndComp
+$Comp
+L Transistor_BJT:2N3904 Q1
+U 1 1 5F95DC28
+P 3250 3700
+F 0 "Q1" H 3441 3746 50  0000 L CNN
+F 1 "2N3904" H 3441 3655 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-92_Wide" H 3450 3625 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/2N3903-D.PDF" H 3250 3700 50  0001 L CNN
+	1    3250 3700
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:2N3904 Q2
+U 1 1 5F95E6F3
+P 4350 3750
+F 0 "Q2" H 4540 3796 50  0000 L CNN
+F 1 "2N3904" H 4540 3705 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-92_Wide" H 4550 3675 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/2N3903-D.PDF" H 4350 3750 50  0001 L CNN
+	1    4350 3750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3150 2500 3150 2700
+Wire Wire Line
+	4450 2500 4450 2700
+$Comp
+L Device:R R2
+U 1 1 5F9647E4
+P 3600 2350
+F 0 "R2" H 3670 2396 50  0000 L CNN
+F 1 "47k" H 3670 2305 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0516_L15.5mm_D5.0mm_P20.32mm_Horizontal" V 3530 2350 50  0001 C CNN
+F 3 "~" H 3600 2350 50  0001 C CNN
+	1    3600 2350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3600 2500 3600 3250
+Wire Wire Line
+	3600 3250 3450 3250
+Wire Wire Line
+	4000 3250 4100 3250
+Wire Wire Line
+	4450 3250 4400 3250
+Wire Wire Line
+	4450 2200 4000 2200
+Connection ~ 3600 2200
+Wire Wire Line
+	3600 2200 3150 2200
+Connection ~ 4000 2200
+Wire Wire Line
+	4000 2200 3600 2200
+Wire Wire Line
+	4450 3950 3150 3950
+Wire Wire Line
+	3150 3950 3150 3900
+Wire Wire Line
+	3450 3700 4000 3700
+Wire Wire Line
+	4000 2500 4000 3250
+Connection ~ 4000 3250
+Wire Wire Line
+	4000 3250 4000 3700
+Wire Wire Line
+	4150 3750 3600 3750
+Wire Wire Line
+	3600 3750 3600 3250
+Connection ~ 3600 3250
+$Comp
+L Connector_Generic:Conn_01x02 J1
+U 1 1 5F967EAE
+P 2000 3050
+F 0 "J1" H 1918 2725 50  0000 C CNN
+F 1 "Conn_01x02" H 1918 2816 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Horizontal" H 2000 3050 50  0001 C CNN
+F 3 "~" H 2000 3050 50  0001 C CNN
+	1    2000 3050
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	2200 2950 2200 2200
+Wire Wire Line
+	2200 2200 3150 2200
+Connection ~ 3150 2200
+Wire Wire Line
+	2200 3050 2200 3950
+Wire Wire Line
+	2200 3950 3150 3950
+Connection ~ 3150 3950
+Wire Wire Line
+	3150 3000 3150 3250
+Connection ~ 3150 3250
+Wire Wire Line
+	3150 3250 3150 3500
+Wire Wire Line
+	4450 3000 4450 3250
+Connection ~ 4450 3250
+Wire Wire Line
+	4450 3250 4450 3550
+$EndSCHEMATC
