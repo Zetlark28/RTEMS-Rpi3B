@@ -17,5 +17,4 @@
 #define LED_ON(g)  do { unsigned int *gpio = (unsigned int *)BCM2835_GPIO_REGS_BASE; GPIO_CLR = 1 << (g % 32);} while(0)
 #define LED_OFF(g)  do { unsigned int *gpio = (unsigned int *)BCM2835_GPIO_REGS_BASE; GPIO_SET = 1 << (g % 32);} while(0)
 
-int led_status(int g){do{unsigned int *gpio = (unsigned int *) BCM2835_GPIO_REGS_BASE; return GET_GPIO(g);}while(0);}
 #endif //LED_TEST_LED_H
