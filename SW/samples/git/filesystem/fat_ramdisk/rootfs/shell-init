@@ -1,0 +1,3 @@
+mkdos /dev/rda
+mkdir /rd
+mount -t dosfs /dev/rda /rd

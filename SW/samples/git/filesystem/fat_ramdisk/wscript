@@ -1,0 +1,47 @@
+# Copyright 2013 Gedare Bloom (gedare@rtems.org)
+#
+# This file's license is 2-clause BSD as in this distribution's LICENSE.2 file.
+#
+
+# Waf build script for RTEMS fat_ramdisk
+
+import rtems_waf.rtems as rtems
+import rtems_waf.rootfs as rootfs
+
+version = "1.0.0"
+
+def build(bld):
+    rtems.build(bld)
+
+    arch_bsp = bld.get_env()['RTEMS_ARCH_BSP']
+    arch = bld.get_env()['RTEMS_ARCH']
+    bsp = bld.get_env()['RTEMS_BSP']
+
+    #
+    # The include paths and defines.
+    #
+    bld.includes = ['.']
+    bld.defines = ['PACKAGE_VERSION="' + version + '"']
+
+    #
+    # Package the root file system as a C file.
+    #
+    if rtems.check_env(bld, 'RTEMS_BIN2C', 'RTEMS_TLD'):
+        rootfs.build_from_src_root(bld,
+                                   name = 'fs-root',
+                                   root = 'rootfs')
+
+        bld.path.find_or_declare('fs-root-tar.h')
+
+        bld(features = 'c cprogram',
+            target = 'fat_ramdisk.exe',
+            includes = bld.includes,
+            defines = bld.defines,
+            source = ['init.c', 'fs-root-tar.c'])
+
+        bld(features = 'c rtrace',
+            target = 'fat_ramdisk.texe',
+            includes = bld.includes,
+            defines = bld.defines,
+            source = ['init.c', 'fs-root-tar.c'],
+            rtrace_cfg = '../../filesystem/fat_ramdisk/fat_ramdisk.ini')

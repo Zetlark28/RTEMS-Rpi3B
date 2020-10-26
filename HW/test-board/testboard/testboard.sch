@@ -1,0 +1,68 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "Testboard RTEMS - RPI 3B+ "
+Date ""
+Rev "1.0"
+Comp "BIS-ITALIA"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Device:LED D1
+U 1 1 5F95E52D
+P 5600 2750
+F 0 "D1" V 5639 2632 50  0000 R CNN
+F 1 "LED" V 5548 2632 50  0000 R CNN
+F 2 "LED_THT:LED_D5.0mm" H 5600 2750 50  0001 C CNN
+F 3 "~" H 5600 2750 50  0001 C CNN
+	1    5600 2750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0101
+U 1 1 5F960D9C
+P 5600 3200
+F 0 "#PWR0101" H 5600 2950 50  0001 C CNN
+F 1 "GND" H 5605 3027 50  0000 C CNN
+F 2 "" H 5600 3200 50  0001 C CNN
+F 3 "" H 5600 3200 50  0001 C CNN
+	1    5600 3200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5600 2900 5600 3200
+$Comp
+L Connector:Conn_01x01_Male J1
+U 1 1 5F9625B0
+P 4850 2550
+F 0 "J1" H 4958 2731 50  0000 C CNN
+F 1 "Conn_01x01_Male" H 4958 2640 50  0000 C CNN
+F 2 "Connector_Wire:SolderWire-2sqmm_1x01_D2mm_OD3.9mm_Relief2x" H 4850 2550 50  0001 C CNN
+F 3 "~" H 4850 2550 50  0001 C CNN
+	1    4850 2550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 5F963441
+P 5400 2550
+F 0 "R1" V 5193 2550 50  0000 C CNN
+F 1 "R" V 5284 2550 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P2.54mm_Vertical" V 5330 2550 50  0001 C CNN
+F 3 "~" H 5400 2550 50  0001 C CNN
+	1    5400 2550
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5050 2550 5250 2550
+Wire Wire Line
+	5550 2550 5600 2550
+Wire Wire Line
+	5600 2550 5600 2600
+$EndSCHEMATC
