@@ -13,79 +13,62 @@
 #include <bsp/mmu.h>
 #include <inttypes.h>
 #include <bsp/raspberrypi.h>
-#include <bsp.h>
 #include "led.h"
-#include "tmacros.h"
 
-volatile int led_do_print;
-volatile int led_value;
-rtems_id     Timer1;
-rtems_id     Timer2;
+volatile char led;
 
-void LED_Change_Routine( void ) {
-  int _led_do_print;
-  int _led_value;
+rtems_task blink(rtems_task_argument argument);
 
-  /* technically the following 4 statements are a critical section */
-  _led_do_print = led_do_print;
-  _led_value = led_value;
-  led_do_print = 0;
-  led_value = 0;
+rtems_task Init(rtems_task_argument ignored){
+  rtems_id          tid;
+  rtems_status_code status;
+  rtems_name        name;
 
-  if ( _led_do_print ) {
-    if ( _led_value == 1 )
-      LED_OFF(4);
-    else
-      LED_ON(4);
-  }
-}
+  name = rtems_build_name( 'A', 'P', 'P', '1' );
 
-rtems_timer_service_routine Timer_Routine( rtems_id id, void *ignored )
-{
-  if ( id == Timer1 )
-    led_value = 1;
-  else
-    led_value = 2;
-  led_do_print = 1;
-
-  (void) rtems_timer_fire_after(
-    id,
-    2 * rtems_clock_get_ticks_per_second(),
-    Timer_Routine,
-    NULL
-  );
-}
-
-rtems_task Init(
-  rtems_task_argument argument
-)
-{
-  puts( "\n\n*** LED BLINKER -- timer ***" );
-
-  LED_INIT(4);
-
-  (void) rtems_timer_create(rtems_build_name( 'T', 'M', 'R', '1' ), &Timer1);
-
-  (void) rtems_timer_create(rtems_build_name( 'T', 'M', 'R', '2' ), &Timer2);
-
-  Timer_Routine(Timer1, NULL);
-  LED_Change_Routine();
-
-  (void) rtems_task_wake_after( rtems_clock_get_ticks_per_second() );
-
-  Timer_Routine(Timer2, NULL);
-  LED_Change_Routine();
-
-  while (1) {
-    (void) rtems_task_wake_after( 10 );
-    LED_Change_Routine();
+  status = rtems_task_create(
+     name, 1, RTEMS_MINIMUM_STACK_SIZE,
+     RTEMS_NO_PREEMPT, RTEMS_FLOATING_POINT, &tid);
+  if ( status != RTEMS_SUCCESSFUL ) {
+    printf( "rtems_task_create failed with status of %d.\n", status );
+    fflush(stdout);
+    exit( 1 );
   }
 
-  (void) rtems_task_delete( RTEMS_SELF );
+  printf( "\n\n*** LED BLINKER (GPIO4) -- task wake after ***" );
+  fflush(stdout);
+
+  status = rtems_task_start( tid, blink, 0 );
+  if ( status != RTEMS_SUCCESSFUL ) {
+    printf( "rtems_task_start failed with status of %d.\n", status );
+    fflush(stdout);
+    exit( 1 );
+  }
+
+  status = rtems_task_delete( RTEMS_SELF );    /* should not return */
+  printf( "rtems_task_delete returned with status of %d.\n", status );
+  fflush(stdout);
+  exit(1);
 }
 
 
-/**************** START OF CONFIGURATION INFORMATION ****************/
+rtems_task blink(rtems_task_argument argument)
+{
+  /* application specific initialization goes here */
+ printf( "\n blink task started: \n");
+ fflush(stdout);
+ rtems_interval    seconds;
+ led = argument;
+ LED_INIT(4);
 
-
-/****************  END OF CONFIGURATION INFORMATION  ****************/
+ while ( 1 )  {
+	 if (led){
+	  LED_OFF(4); led = false;
+	 }
+	 else{
+	  LED_ON(4); led = true;
+	 }
+ seconds = 10 * rtems_clock_get_ticks_per_second();
+ rtems_task_wake_after(seconds );/* infinite loop */
+  }
+}
