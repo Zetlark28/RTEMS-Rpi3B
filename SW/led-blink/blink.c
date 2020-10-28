@@ -64,11 +64,14 @@ rtems_task blink(rtems_task_argument argument)
  while ( 1 )  {
 	 if (led){
 	  LED_OFF(4); led = false;
+	  putchar('0');
 	 }
 	 else{
 	  LED_ON(4); led = true;
+	  putchar('1');
 	 }
- seconds = 10 * rtems_clock_get_ticks_per_second();
+ fflush(stdout);
+ seconds = 2 * rtems_clock_get_ticks_per_second();
  rtems_task_wake_after(seconds );/* infinite loop */
   }
 }

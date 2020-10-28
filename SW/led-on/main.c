@@ -7,11 +7,19 @@
 #include "led.h"
 
 rtems_task Init(rtems_task_argument argument){
-  printf( "\n\n*** LED (GPIO4) ON ***" );
+  printf("***START TEST*** \n");
   fflush(stdout);
+  rtems_interval  seconds = 1 * rtems_clock_get_ticks_per_second();
   LED_INIT(4);
   LED_ON(4);
-  printf("\n\n *** FINISH TEST  *** ");
+  rtems_task_wake_after(seconds);
+  LED_OFF(4);
+  rtems_task_wake_after(seconds);
+  LED_ON(4);
+  rtems_task_wake_after(seconds);
+  LED_OFF(4);
+  printf("***FINISH TEST***\n");
   fflush(stdout);
+  rtems_task_wake_after(seconds);
   exit(0);
 }
