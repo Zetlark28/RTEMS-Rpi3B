@@ -1,6 +1,6 @@
 Problemi riscontrati:
 
 - l'installazine della toolchain falliva -> versioni discordanti, poichè stanno sviluppando la v6
-- arm rtem5 gcc non compila l'exe correttamente -> ??
+- arm rtem5 gcc non compila l'exe correttamente -> define in system.c erano sbagliati, invece di #define CONFIGURE_APPLICATION_NEEDS_SIMPLE_CONSOLE_DRIVER c'era CONFIGURE_APPLICATION_CONSOLE_DRIVER, e serve il fflush(stdout) per scrivere.
 
 

@@ -1,5 +1,6 @@
 Note per scrittura programmi per RTEMS: 
 
+**** RTEMS C GUIDE ****
 
 Fasi di un task: 
  - executing - Currently scheduled to the CPU
@@ -13,4 +14,83 @@ Fasi di un task:
  Tasks of numerically smaller priority values are more important tasks than tasks of numerically larger priority values. 
  
  
+**** NOTE ****
  
+--- GianMaria ---
+ 
+Attenzione: nelle macro hai utilizzato unsigned int * per puntare ad un indirizzo di memoria o registro.
+Questo codice non è portabile e può essere pericoloso: i tipi primitivi come int hanno lunghezza in bit che è implementation-defined, tipicamente 32 bit in architetture moderne.
+Se lo spazio di memoria virtuale fornito dal sistema operativo funziona con indirizzamento maggiore di 32 bit, puoi avere qualcosa che viene allocato oltre lo spazio indirizzabile a 32 bit.
+A quel punto, quello che succede con una variabile che punta al risultato di tipo int di un'espressione che va oltre la capacità massima di int è UB (Undefined Behaviour).
+
+Il tipo corretto per fare queste operazioni è uintptr_t, disponibile includendo inttypes.h o stdint.h, definito dall'implementazione sottostante (ad hoc per l'architettura) secondo standard ISO C99.
+ 
+Ogni task ha un suo stack dove può salvare lo stato.
+Lo stato in C è implementabile con variabili e funzioni static (sembra un gioco di parole, ma non lo è) nell'ottica globale dell'unità di compilazione dove si trova la funzione della task.
+
+Altre unità di compilazione possono avere variabili static al loro interno per espandere lo stato della task.
+In questo caso è consigliabile che queste unità non vengano incluse da più di una unità contenente una task.
+La sincronizzazione dello stato tra task a quel punto deve avvenire tramite apposite funzioni, o "getters".
+
+Approccio portabile su altri sistemi RTOS che funzionano allo stesso modo.
+
+Per far funzionare questa cosa serve che il linker metta le cose al punto giusto nel binario finale, l'IDE dovrebbe pensarci da solo.
+Possibile struttura dell'applicativo:
+task1.h
+|
+|__public task function iface
+
+task1.c
+|
+|__includes
+|  |
+|  |__task1_helper.h
+|
+|__own static variables
+|
+|__own static functions
+|
+|__public task function impl
+
+task1_helper.h
+|
+|__public funcs ifaces
+
+task1_helper.c
+|
+|__own static variables
+|
+|__public funcs impls
+
+Il file task1.c implementa la funzione il cui puntatore viene passato al sistema per inizializzare la task.
+
+Il file task1_helper.c implementa funzioni in più che magari non si vogliono mettere in task1.c per qualsivoglia ragione, ad esempio per non far diventare il file task1.c troppo lungo.
+
+Il punto è che con questa architettura, se task1.c è il solo consumatore di task1_helper.c, di fatto le variabili statiche in task1_helper.c espandono lo stato interno di task1.c, ma vengono accedute tramite apposite interfacce esposte da task1_helper.h e implementate in task1_helper.c.
+
+Il contenuto di task1_helper.c sarà "dumb".
+Le variabili statiche di task1_helper.c non si troveranno nello stack della task implementata in task1.c, ma in una zona dedicata del binario scelta dal linker.
+Non c'è differenza sostanziale tra le funzioni in task1.c e quelle in task1_helper.c. La separazione tra file serve solo modulare il codice.
+
+È un'architettura minimale che serve a far scalare il codice quando diventa palese che non possono coesistere troppe cose nello stesso file.
+
+
+non è detto che serva accedere allo stato dell'helper. Il punto è che c'è, di fatto, uno stato in ogni dato momento, anche nell'helper.
+
+Ma l'interfaccia con l'helper non deve necessariamente essere fatta di setter/getter.
+Nell'header dell'helper ci saranno interfacce pensate in termini di "quali azioni serve eseguire alla task".
+Solo in casi particolari, se è motivata una "introspezione" nello stato dell'helper, si può pensare di dedicare un'interfaccia al semplice "get" di qualcosa.
+
+Inevitabilmente servirà di sincronizzare più task non solo sullo stato interno, ma su uno stato globale.
+
+Qui si può scegliere se introdurre:
+
+- una task mediatrice che implementi un "manager", un "server", un "produttore", un "listener di segnali", una coda, o quel che si vuole, oppure
+
+- un header globale per le variabili che determinano lo stato globale, insieme alle handle ai relativi lock (mutex).
+Poi ogni task che deve usare queste variabili dovrà esplicitamente: includere un header di sistema che implementa i lock; prenotare i lock prima della lettura o scrittura della variabile protetta; leggere/scrivere; rilasciare il lock. In caso di più lock, vanno rilasciati nell'ordine inverso a quello di prenotazione: AB ~ BA.
+
+Nei sistemi embedded nessuno dei due approcci diventa un "anti-pattern" se usato con cognizione di causa.
+
+**** DATASHEET RPI APPPUNTI ****
+RPI 3B+ GPIO ha due bank il primo (0) va da 0 a 27 il secondo (1) da 28 a 45 
