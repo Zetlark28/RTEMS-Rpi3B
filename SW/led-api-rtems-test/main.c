@@ -14,6 +14,7 @@ rtems_task Init(rtems_task_argument argument){
   rtems_gpio_initialize();
   rtems_gpio_bsp_select_input(0, 4, &bsp_spec);
   rtems_gpio_bsp_select_output(0, 4, &bsp_spec);
+
   printf("***START TEST*** \n");
   fflush(stdout);
 
@@ -27,7 +28,7 @@ rtems_task Init(rtems_task_argument argument){
 	  rtems_task_wake_after(seconds);
   }
 
-  //should reach here
+  //should never reach here
   printf("***FINISH TEST***\n");
   fflush(stdout);
   exit(0);
