@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="org.rtems.cdt.config.92322151">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.rtems.cdt.config.92322151" moduleId="org.eclipse.cdt.core.settings" name="RTEMS Executable Configuration">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" description="" id="org.rtems.cdt.config.92322151" name="RTEMS Executable Configuration" optionalBuildProperties="" parent="org.rtems.cdt.config">
+					<folderInfo id="org.rtems.cdt.config.92322151." name="/" resourcePath="">
+						<toolChain id="org.rtems.cdt.config.toolchain.1157643063" name="RTEMS Toolchain" superClass="org.rtems.cdt.config.toolchain">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="org.rtems.cdt.target.1042102825" name="RTEMS Target" osList="all" superClass="org.rtems.cdt.target"/>
+							<builder buildPath="${workspace_loc:/led-blink-more-in-0}/RTEMS Executable Configuration" id="org.rtems.cdt.builder.342663751" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="org.rtems.cdt.builder"/>
+							<tool id="org.rtems.cdt.compiler.c.508545467" name="RTEMS C Compiler" superClass="org.rtems.cdt.compiler.c">
+								<inputType id="org.rtems.cdt.compiler.input.c.1486322266" superClass="org.rtems.cdt.compiler.input.c"/>
+							</tool>
+							<tool id="org.rtems.cdt.compiler.cpp.1416512405" name="RTEMS C++ Compiler" superClass="org.rtems.cdt.compiler.cpp"/>
+							<tool id="org.rtems.cdt.linker.c.535151149" name="RTEMS Linker" superClass="org.rtems.cdt.linker.c">
+								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.103252787" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="org.rtems.cdt.assembler.gcc.1561692074" name="RTEMS Assembler" superClass="org.rtems.cdt.assembler.gcc">
+								<inputType id="org.rtems.cdt.assembler.gcc.input.61828481" superClass="org.rtems.cdt.assembler.gcc.input"/>
+							</tool>
+							<tool id="org.rtems.cdt.assembler.204600305" name="RTEMS Bare Assembler" superClass="org.rtems.cdt.assembler">
+								<inputType id="org.rtems.cdt.assembler.input.74859578" superClass="org.rtems.cdt.assembler.input"/>
+							</tool>
+							<tool id="org.rtems.cdt.archiver.2092745299" name="RTEMS Archiver" superClass="org.rtems.cdt.archiver"/>
+							<tool id="org.rtems.cdt.linker.cpp.872394235" name="RTEMS C++ Linker" superClass="org.rtems.cdt.linker.cpp"/>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="led-blink-more-in-0.org.rtems.cdt.projectType.1526309263" name="RTEMS Executable" projectType="org.rtems.cdt.projectType"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="RTEMS Executable Configuration">
+			<resource resourceType="PROJECT" workspacePath="/led-blink-more-in-0"/>
+		</configuration>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+</cproject>
