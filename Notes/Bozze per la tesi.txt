@@ -1,3 +1,33 @@
+INDICE 
+  Introduzione
+1-Software utilizzati
+  - Ubuntu
+  - Git
+  - Eclipse
+  - KiCad (?)
+2-Hardware (?)   
+  - test board (?)
+  - Raspberry pi 3B+
+3-RTEMS
+
+4-Descrizione attività svolte durante il tirocinio
+    - porting RTEMS 
+	- programmi di test
+	- KiCad (?)
+	
+5-Ambiente di test:
+  - Interfacce 
+  - Definizione della test board
+  
+6-Test 
+ - Descrizione e obiettivi dei test
+ - Risultati
+ 
+7-Conclusione
+Ringraziamenti
+ 
+
+
 *** INTRODUZIONE ***
 --- ARGOMENTO E MOTIVAZIONE ---
 
