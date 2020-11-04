@@ -1,0 +1,111 @@
+GUIDA PORTING RTEMS SU RASPBERRY PI 3B+
+INTRODUZIONE
+1- configurazione iniziale del sistema
+2- Installazione RTEMS
+3- Prova sample test RTEMS 
+4- configurazione Eclipse
+5- creazione programma con Eclipse
+
+
+Guida per l'installazione di RTEMS RSB e della tool-suite per l' utilizzo del kernel di RTEMS per l'architettura ARM con target le BSP di Raspberry Pi 1 e Raspberry Pi 2, quest'ultima è compatibile con la Raspberry pi 3.
+
+Poichè RTEMS è un progetto open source ancora in sviluppo, al momento stanno sviluppando la v6, ma non è ancora stabile, per questo motivo in questa guida si installerà la v5.1 che è la versione stabile più recente.
+
+--DEFINIZIONE DI RSB--
+La BSP (Board Support Package) è il codice di supporto per una specifica scheda, esso contiene librerie di RTEMS utili per l'utilizzo della scheda.  
+
+Durante questa guida verranno utilizzati comandi da terminale, e il sistema operativo su cui si basa è Ubuntu Ubuntu LTS 20.04.
+
+****CONFIGURAZIONE INIZIALE DEL SISTEMA****
+Prima di iniziare l'installazione di RTEMS RSB e tool-suite bisogna configurare l'ambiente di sviluppo.
+Procediamo con l'installazione dei seguenti pacchetti:
+- build-essential : $ sudo apt-get install build-essential
+- git : $ sudo apt-get install git
+- python-dev : $ sudo apt-get install python-dev
+/*- le dipendenze dei pacchetti appena installati : $ sudo apt-get build-dep binutils gcc g++ gdb unzip git */
+
+A questo punto definiamo la struttura delle cartelle in cui verranno installati i componenti di RTEMS.
+
+$HOME/rtems-dev  : base directory
+$HOME/rtems-dev : base directory dove vengono clonati da git la tool-suite e la RSB di RTEMS
+$HOME/rtems-dev/src/rsb : RTEMS source builder
+$HOME/rtems-dev/src/rtems : RTEMS tool-suite
+$HOME/rtems-dev/rtems/ : dove verrà installata la RTEMS tool-suite
+$HOME/rtems-dev/build : dove verranno installata la BSP di RPi1 e RPi2
+
+****INSTALLAZIONE RTEMS****
+Dopo aver preparato l'ambiente di sviluppo, possiamo procedere con l'installazione di RTEMS:
+-Clonazione di RTEMS RSB e tool-suite : 
+	$ mkdir - p $HOME/rtems-dev/src
+	$ cd $HOME/rtems-dev/src
+	$ git clone -b 5.1 git://git.rtems.org/rtems-source-builder.git rsb
+	$ git clone -b 5.1 git://git.rtems.org/rtems.git
+- Installiamo la tool suite utilizzando la RSB :
+	$ cd $HOME/rtems-dev/src/rsb/rtems
+	$ ../source-builder/sb-set-builder --prefix= $HOME/quick-start/rtems/5 5/rtems-arm
+	
+-Dopo aver completato l'installazione possiamo controllare che il C cross compiler di RTEMS funzioni :
+	$ $HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc --version
+-Inseriamo nel variabili di  ambiente i comandi della toolchain e procediamo con il bootstrap:
+	$ export PATH=$HOME/rtems-dev/rtems/5/bin:"$PATH"
+	$ cd $HOME/rtems-dev/src/rtems
+	$ ./rtems-bootstrap
+-Adesso possiamo configurare ed installare le BSPs che ci servono 		$ mkdir -p $HOME/rtems-dev/build
+	$ cd $HOME/rtems-dev/build
+	$ $HOME/rtems-dev/src/rtems/configure \
+	--prefix=$HOME/quick-start/rtems/5 \
+	--target=arm-rtems5 \
+	--enable-rtemsbsp="raspberrypi raspberrypi2"\
+	--enable-tests=samples --enable-networking --enable-posix
+	$ make
+	$ make install		
+	
+Svolti tutti i passaggi precedenti abbiamo come risultato RTEMS installato sul computer host.
+
+****PROVA SAMPLE TEST RTEMS****
+Installando le BSP, RTEMS ci fornisce dei sample test .exe da cui possiamo generare i file .img e utilizzarli per testare il funzionamento della raspberry pi
+
+I sample test sono in : 
+- per rpi 1 : $HOME/rtems-dev/build/arm-rtems5/c/raspberrypi1/testsuites/samples
+- per rpi2 e 3 : $HOME/rtems-dev/build/arm-rtems5/c/raspberrypi2/testsuites/samples
+
+In questa guida utilizziamo il sample 'ticker.exe', ma i passaggi che verranno illustrati valgono anche per gli altri sample presenti in cartella.
+Per poter utilizzare il sample test dobbiamo fare 2 passaggi:
+- Creazione kernel file .img:
+	- assicurarsi di avere come variabile di ambiente i comandi della tool-suite:
+		$ echo $PATH
+	se non è presente  '$HOME/rtems-dev/rtems/5/bin' allora bisogna inserirla. 	
+	- posizionarsi nella cartella dove verrà creato il file .img:
+		$ cd $HOME/rtems-dev/rtems 
+	- generare il file .img:
+	per rpi1 : $arm-rtems5-objcopy -Obinary $HOME/rtems-dev/build/arm-rtems5/c/raspberrypi1/testsuites/samples/ticker.exe ticker.img
+	per rpi2 : $arm-rtems5-objcopy -Obinary $HOME/rtems-dev/build/arm-rtems5/c/raspberrypi2/testsuites/samples/ticker.exe ticker.img
+	
+
+- Configurare la SD card
+	- copiamo nella sd il firmware di Rpi (v4.19.11.3) compatibile con RTEMS. 
+	Il firmware puo' essere scaricato da questo link: https://github.com/raspberrypi/firmware/tree/5574077183389cd4c65077ba18b59144ed6ccd6d/boot 
+	Eliminiamo tutti i file kernel*.img, questi verranno sostituiti dal file kernel che abbiamo generato precedentemente.
+	- copiamo nella sd il file ticker.img creato precendetemente.
+	- creiamo nella sd il file config.txt che contiene il seguente testo:
+		enable_uart=1
+		kernel_address=0x200000
+ 		kernel=ticker.img 
+ 	nel campo kernel mettiamo il nome del kernel file che vogliamo che rpi esegua.
+ 
+A questo punto siamo pronti con il test.
+
+Un comando per vedere la log della UART per debug è :
+sudo minicom -b 115200 -D /dev/serial/by-id/<indirizzo periferica utilizzata per l'UART di solito un USB TTL>
+
+Colleghiamo il UART del Rpi al computer e vediamo il risultato:
+
+****CONFIGURAZIONE ECLIPSE C****
+
+****PROVA CON ECLIPSE C****
+
+****CREAZIONE FILE KERNEL RTEMS SENZA ECLIPSE****
+
+	
+ 
+
