@@ -31,7 +31,7 @@ $HOME/rtems-dev : base directory dove vengono clonati da git la tool-suite e la 
 $HOME/rtems-dev/src/rsb : RTEMS source builder
 $HOME/rtems-dev/src/rtems : RTEMS tool-suite
 $HOME/rtems-dev/rtems/ : dove verrà installata la RTEMS tool-suite
-$HOME/rtems-dev/build : dove verranno installata la BSP di RPi1 e RPi2
+$HOME/rtems-dev/build : dove verranno installate le BSP di RPi1 e RPi2
 
 ****INSTALLAZIONE RTEMS****
 Dopo aver preparato l'ambiente di sviluppo, possiamo procedere con l'installazione di RTEMS:
@@ -101,11 +101,92 @@ sudo minicom -b 115200 -D /dev/serial/by-id/<indirizzo periferica utilizzata per
 Colleghiamo il UART del Rpi al computer e vediamo il risultato:
 
 ****CONFIGURAZIONE ECLIPSE C****
+Per creare i file sorgenti per programmi di RTEMS possiamo utilizzare l'IDE Eclipse C/C++ scaricabile da questo link :
+https://www.eclipse.org/downloads/packages/
+
+Una volta installato Eclipse C/C++ bisogna installare il plugin di RTEMS:
+- Andiamo su Help> INstall New Software
+- Aggiungiamo come Software site quello di RTEMS, quindi clicchiamo add e inseriamo il seguente url ​ftp://ftp.rtems.org/pub/rtems/eclipse/updates/ to
+- Selezioniamo il plugin RTEMS CDT Support e installiamo
+
+A questo punto abbiamo installato il plugin di RTEMS ed è pronto ad essere utilizzato.
+
+Quando creiamo un progetto RTEMS bisogna configurare la base e il BSP path di RTEMS in modo che si riesca ad utilizzare le librerie che ci servono:
+- Window >Preferences > C/C++ > RTEMS
+- Base path : base path dell'installazione , nel nostro caso home/<username>/rtems-dev/rtems/5
+- BSP path : path dell'installazione della BSP, nel nostro caso home/<username>/rtems-dev/rtems/5/arm-rtems5/raspberrypi2 (o 1 se si utilizza Rpi1)
+
+Abbiamo completato la configurazione del plugin di RTEMS su Eclipse C, adesso possiamo procedere alla creazione di un progetto RTEMS:
+- New project>C Project
+- Selezionare il project type corretto: Others> RTEMS Executable
+- Selezionare la Toochain corretta : RTEMS Toolchain
+
+Possiamo controllare che il progetto è stato creato correttamente controllando le sue properties e su C/C++ Build> RTEMS i path siano quelli corretti.
 
 ****PROVA CON ECLIPSE C****
 
+Possiamo adesso fare un semplice programma di prova "hello world",
+creiamo 2 file sorgenti:
+- init.c : conterrà il task principale che verrà eseguito ciclicamente
+- system.c : conterrà il codice di configurazione di RTEMS.
+
+in init.c inseriamo il seguente codice:
+"
+/*
+ * Hello world example
+ */
+#include <rtems.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <bsp/mmu.h>
+
+rtems_task Init(rtems_task_argument ignored) {
+	printf("\n\n*** HELLO WORLD TEST ***\n");
+	printf("Hello World\n");
+	printf("*** END OF HELLO WORLD TEST ***\n");
+	exit(0);
+}
+
+"
+
+in system.c inseriamo il seguente codice :
+"
+/*
+ * Simple RTEMS configuration
+ */
+
+#define CONFIGURE_APPLICATION_DOES_NOT_NEED_CLOCK_DRIVER
+#define CONFIGURE_APPLICATION_NEEDS_SIMPLE_CONSOLE_DRIVER
+
+#define CONFIGURE_UNLIMITED_OBJECTS
+#define CONFIGURE_UNIFIED_WORK_AREAS
+
+#define CONFIGURE_RTEMS_INIT_TASKS_TABLE
+
+#define CONFIGURE_INIT
+
+#include <rtems/confdefs.h>
+"
+
+per una migliore comprensione del codice ti rimando ai seguenti link:
+- per le api: https://devel.rtems.org/browser/rtems/bsps/arm/raspberrypi
+- per la configurazione di rtems: https://ftp.rtems.org/pub/rtems/people/joel/docs-eng/c-user/configuring_a_system.html
+
+
+A questo punto possiamo buildare il programma, e nella cartella del progetto troveremo la cartella 'RTEMS Executable Configuration' che contiene il file .exe che utilizzeremo per creare il file .img da mettere nella scheda SD.
+I passaggi per la creazione del file .img sono sopracitati.
+
 ****CREAZIONE FILE KERNEL RTEMS SENZA ECLIPSE****
 
+Se si vuole creare il file .img partendo dal sorgente allora dobbiamo usare i seguenti comandi nel terminale:
+- ci posizioniamo nella cartella dove ci sono i file sorgenti.
+- eseguiamo i comandi del cross compiler di RTEMS su tutti i file .c: 
+$HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc -B $HOME/rtems-dev/rtems/5/arm-rtems5/raspberrypi2/lib/ -specs bsp_specs -qrtems -ffunction-sections -fdata-sections -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard -mtune=cortex-a7 -Os -g -Wall -c -fmessage-length=0 -pipe -MMD -MP -MF"init.d" -MT"init.o" -o "init.o" "../init.c"
+- utilizziamo il linker per la creazione del file .exe :
+$HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc -B$HOME/rtems-dev/rtems/5/arm-rtems5/raspberrypi2/lib/ -specs bsp_specs -qrtems -ffunction-sections -fdata-sections -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard -mtune=cortex-a7 -Wl,--gc-sections -o "hello-rpi.exe"  ./init.o ./system.o    
+
+- a questo punto possiamo creare il file .img e copiarlo sulla scheda sd.
+****TROUBLESHOOTING****
 	
  
 
