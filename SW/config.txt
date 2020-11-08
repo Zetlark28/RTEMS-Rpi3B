@@ -1,0 +1,4 @@
+enable_uart=1
+dtparam=watchdog=off
+kernel_address=0x200000
+kernel=hello.img 

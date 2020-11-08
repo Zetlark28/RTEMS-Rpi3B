@@ -9,7 +9,7 @@
  \usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
-    linkcolor=blue,
+    linkcolor=black,
     filecolor=magenta,      
     urlcolor=cyan,
 }
@@ -35,7 +35,7 @@ La BSP (Board Support Package) è il codice di supporto per una specifica scheda
 
 Poichè RTEMS è un progetto open source ancora in sviluppo, al momento stanno sviluppando la v6, ma non è ancora stabile, per questo motivo in questa guida si installerà la v5.1 che è la versione stabile più recente.
 
-Durante questa guida verranno utilizzati comandi da terminale, e il sistema operativo su cui si basa è Ubuntu LTS 20.04.
+Durante questa guida viene usato il sistema operativo su cui si basa è Ubuntu LTS 20.04.
 
 
 \newpage
@@ -163,8 +163,8 @@ testsuites/samples/ticker.exe ticker.img
 \end{lstlisting}
 \item Configurare la SD card:
 copiamo nella scheda sd il firmware di Rpi (v4.19.11.3) compatibile con RTEMS. 
-Il firmware puo' essere scaricato da questo link: 
-\url{https://github.com/raspberrypi/firmware/tree/5574077183389cd4c65077ba18b59144ed6ccd6d/boot}
+Il firmware puo' essere scaricato da questo link:  \\
+\small\url{https://github.com/raspberrypi/firmware/tree/5574077183389cd4c65077ba18b59144ed6ccd6d/boot}
 Eliminiamo tutti i file kernel*.img, questi verranno sostituiti dal file 
 kernel che abbiamo generato precedentemente.
 Copiamo nella sd il file ticker.img creato precendetemente.
@@ -204,31 +204,116 @@ A questo punto abbiamo installato il plugin di RTEMS ed è pronto ad essere util
 
 Quando creiamo un progetto RTEMS bisogna configurare la base e il BSP path di RTEMS in modo che si riesca ad utilizzare le librerie che ci servono:
 \begin{itemize}
-\item Window >Preferences > C/C++ > RTEMS
+\item Window $\rightarrow$ Preferences $\rightarrow$ C/C++ $\rightarrow$ RTEMS
 \item Base path : base path dell'installazione , nel nostro caso home/<username>/rtems-dev/rtems/5
 \item BSP path : path dell'installazione della BSP, nel nostro caso home/<username>/rtems-dev/rtems/5/arm-rtems5/raspberrypi2 (o 1 se si utilizza Rpi1)
 \end{itemize}
 
 Abbiamo completato la configurazione del plugin di RTEMS su Eclipse C, adesso possiamo procedere alla creazione di un progetto RTEMS:
 \begin{itemize}
-\item New project>C Project
-\item Selezionare il project type corretto: Others> RTEMS Executable
+\item New project$\rightarrow$ C Project
+\item Selezionare il project type corretto: Others$\rightarrow$ RTEMS Executable
 \item Selezionare la Toochain corretta : RTEMS Toolchain
 \end{itemize}
 
-Possiamo controllare che il progetto è stato creato correttamente controllando le sue properties e su C/C++ Build> RTEMS i path siano quelli corretti.
+Possiamo controllare che il progetto è stato creato correttamente controllando le sue properties $\rightarrow$ C/C++ Build $\rightarrow$ RTEMS i path siano quelli corretti.
 
 \newpage
 \section{Prova con Eclipse C/C++}
 
+Possiamo adesso fare un semplice programma di prova "hello world",
+creiamo 2 file sorgenti:
+- init.c : conterrà il task principale (Init) che è il task di "ingresso".
+- system.c : conterrà il codice di configurazione di RTEMS.
+
+in init.c inseriamo il seguente codice:
+\begin{lstlisting}[language=c] 
+
+/*
+ * Hello world example
+ */
+#include <rtems.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <bsp/mmu.h>
+
+rtems_task Init(rtems_task_argument ignored) {
+	printf("\n\n*** HELLO WORLD TEST ***\n");
+	printf("Hello World\n");
+	printf("*** END OF HELLO WORLD TEST ***\n");
+	exit(0);
+}
+
+
+\end{lstlisting}
+in system.c inseriamo il seguente codice :
+
+\begin{lstlisting}[language=c] 
+
+/*
+ * Simple RTEMS configuration
+ */
+
+#define CONFIGURE_APPLICATION_DOES_NOT_NEED_CLOCK_DRIVER
+#define CONFIGURE_APPLICATION_NEEDS_SIMPLE_CONSOLE_DRIVER
+
+#define CONFIGURE_UNLIMITED_OBJECTS
+#define CONFIGURE_UNIFIED_WORK_AREAS
+
+#define CONFIGURE_RTEMS_INIT_TASKS_TABLE
+
+#define CONFIGURE_INIT
+
+#include <rtems/confdefs.h>
+
+\end{lstlisting}
+
+per una migliore comprensione del codice si rimanda ai seguenti link:
+\begin{itemize}
+\item per le api: \url{https://devel.rtems.org/browser/rtems/bsps/arm/raspberrypi}
+\item per la configurazione di rtems su codice (system.c): \url{https://ftp.rtems.org/pub/rtems/people/joel/docs-eng/c-user/configuring_a_system.html}
+\end{itemize}
+
+A questo punto possiamo buildare il programma, e nella cartella del progetto troveremo la cartella 'RTEMS Executable Configuration' che contiene il file .exe che utilizzeremo per creare il file .img da mettere nella scheda SD.
+I passaggi per la creazione del file .img sono sopracitati.
+
 \newpage
 \section{Creazione file kernel senza IDE}
+Se si vuole creare il file .img partendo dai file sorgente allora dobbiamo usare i seguenti comandi nel terminale:
+\begin{itemize}
+\item ci posizioniamo nella cartella dove ci sono i file sorgenti.
+\item eseguiamo i comandi del cross compiler di RTEMS su tutti i file .c: 
+\begin{lstlisting}[language= bash] 
+ $ $HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc -B \
+   $HOME/rtems-dev/rtems/5/arm-rtems5/raspberrypi2/lib/ \
+   -specs bsp_specs -qrtems -ffunction-sections -fdata-sections \
+   -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard -mtune=cortex-a7 \
+   -Os -g -Wall -c -fmessage-length=0 -pipe -MMD -MP -MF"init.d" \
+   -MT"init.o" -o "init.o" "../init.c"
+\end{lstlisting}
+\item utilizziamo il linker per la creazione del file .exe :
+\begin{lstlisting}[language= bash] 
+$ $HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc -B \
+  $HOME/rtems-dev/rtems/5/arm-rtems5/raspberrypi2/lib/ \
+  -specs bsp_specs -qrtems -ffunction-sections -fdata-sections \
+  -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard -mtune=cortex-a7 \
+  -Wl,--gc-sections -o "hello-rpi.exe"  ./init.o ./system.o    
+\end{lstlisting}
+
+\end{itemize}
+\item a questo punto possiamo creare il file .img e copiarlo sulla scheda sd e fare i passaggi già esposti precedentemente.
 
 \newpage
 \section{Troubleshooting}
 
 \newpage
-\section{Bibliografia}
+\section{Sitografia}
+\begin{itemize}
+\item Documentazione RTMES :\\ \url{https://docs.rtems.org/branches/master/user/index.html}
+\item Guida RTEMS di Giorgio :\\ \url{https://gist.github.com/giorgiobasile/1c1930a8a3ff8e36061cd7f4ef83da95}
+\item Sito spiegazione porting RTEMS (Alan Tech):\\ \url{http://alanstechnotes.blogspot.com/2013/03/rtems-on-raspberry-pi.html} 
+\item Documentazione API RTEMS:\\ \url{https://docs.rtems.org/branches/master/c-user/index.html}
+\end{itemize}
 
 \end{flushleft}
 

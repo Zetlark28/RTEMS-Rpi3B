@@ -1,0 +1,73 @@
+Speaker : Marco Lastri
+
+Aziende:
+Leonardo Avionics and Space.
+Garret labs.
+Microchip.
+
+Domande da fare su RTEMS 
+
+- Watchdog su Rpi?
+- Cambio di context?
+- Riscrivere il file config.txt e poi reboot?
+- Fare un programma con più test e attivare solo uno tramite UART 
+- sezione critica come gestirla? Variabili condivise
+- stiamo utilizzando la v5.1
+
+Lo sviluppo software dei sistemi embedded nell'ambito spaziale, bisogna farlo in modo che la velocità delle CPU sia bassa, ciò comporta la trasmissione di dati più lenta e di conseguenza con probabilità di errore di trasmissione minore. Inoltre si disperde meno energia.
+Il SO RTEMS nasce per macchine lente, ed è un sistema operativo General Purpose real time.
+RTEMS è altamente scalabile.
+
+L'eseguibile RTEMS è monotask multithread, simile a un microcontrollore con thread concorrenti. Si ha un unico task che contiene molti thread e li runna.
+
+E' un sistema operativo interattivo, non c'è interazione input shell.
+Ma posso accendere la macchina e viene subito runnato l'applicaizione -> application software (lanciato in modo interattivo)
+
+L'architettura di RTEMS è il seguente:
+Hardware -> supercore (kernel) - BSP -> API -> shell
+
+N.B. se si ha una CPU veloce non importa quale algoritmo di scheduling viene usato, poichè la velocità nasconte tutte le problematiche del determinismo. Infatti per una macchina come Rpi3B+, dove la velocità della CPU è 1.2 GHz usare un algoritmo di scheduling diverso non comporta cambiamenti.
+
+Per gestire la sezione critica bisogna disaccoppiare l'input e outpu dall'elaborazione. 
+Quindi avere un thread per input e un altro per l'output, in questo modo si riesce a gestire la mutex.(!!!)
+
+
+Struttura codice:
+di solito c'è init.c dove si trova il "main" (Init task)
+il main si trova a livello di supercore -> architetura task (instanziatore di thread).
+Multithread, quindi da quel task istanziatore posso instanziare tanti thread.
+
+Posso creare task di supporto che controlla lo stato dei task  ogni tot secondi (se è pending lo ammazza e lo fa ripartire)
+
+La priorità è importate se si utilizza un algoritmo di scheduling, si puo' fare a meno.
+
+L'incremento del ticker viene fatto dall executive 
+
+Un task puo' essere istanziato tante volte, tipo task per ethernet -> 3 task con diversi ip.
+
+sezione critica -> variabile globale (define o nella init) accessibile a tutti i task , passata come parametro ai due task. 
+Sincronizzazione dove all'inizio di entrambi task, presa gettone, scrittura -> lascia gettone l altro task prende il gettone e accede.
+
+Due task con 2 while, all'interno del while(true) il prima istruzione semaforo binario ( occupato o lbero) se libero entro e posso usare la variabile globale (scrittura/lettura).
+Poi aver finito  
+
+il semaforo istanziato  o livello globale o dalla init
+
+sopra il super core e sopra c'è il processo di console attivato con CONFIGURE_APPLICATION_NEEDS_SIMPLE_CONSOLE_DRIVER
+La console va su seriale 0
+ 
+testsuite -> permettono la verifica del corretto esecuzione dell'HD.
+
+
+La task Init è speciale perché rappresenta il punto di "hook" nell'ambiente di sistema già avviato e di per sé inizializzato. Serve quindi in realtà ad inizializzare ciò che vuole l'utente, ad esempio altre task.
+La fine della task di Init rappresenta il punto in cui partono finalmente le task create dall'utente, ed il fallback sulla task di "idle" e cioè il normale proseguimento dello schedulatore.
+Sì Dario è identico alla semantica di FreeRTOS e di altri sistemi RTOS. La semantica è ripresa dai thread POSIX seppur con piccole variazioni sulla sintassi.
+
+Da notare che i tick sono overflow-safe su tipo unsigned, cioè si può sempre fare elapsed = (current - previous) non molto sicuro poichè il risultato puo' essere <0. Nota la frequenza della CPU (statica) è un modo niente male per misurare il tempo trascorso tra un'istruzione e l'altra.
+Se si tratta di una variabile globale, l'header file dedicato alle variabili globali contiene la variabile di un tipo come LCK_Handle (si chiama più o meno così su vari *RTOS). Tipicamente la Init inizializza tutti i lock/mutex/semafori binari che dir si voglia tramite API del tipo LCK_create().
+Questo perché un terzo attore potrebbe poi cercare di fare uso della variabile che però non contiene una handle valida al semaforo, prima della sua effettiva inizializzazione, generando una race condition su qualcosa di inesistente ed andando potenzialmente in stallo.
+Manca infine un parametro importante nell'API che *prenota* il lock/mutex/semaforo binario, che è il timeout.
+Tipicamente c'è una definizione di sistema per il timeout "eterno".
+
+
+NOTA: su rpi dopo aver finito l'esecuzione, quindi exit(0); , l'eseguibile viene rischedulato, probabilmente il watchdog di rpi è attivo ed è la causa della rischedulazione. Controllare che sia veramente così.
