@@ -1,15 +1,13 @@
 /*
- * task.h
+ * init.h
  *
- *  Created on: 2 nov 2020
+ *  Created on: 9 nov 2020
  *      Author: clark
  */
 
+#ifndef INIT_H
 
-
-#ifndef TASK_H
-
-#define TASK_H
+#define INIT_H
 
 #define CONFIGURE_APPLICATION_NEEDS_CLOCK_DRIVER
 #define CONFIGURE_APPLICATION_NEEDS_SIMPLE_CONSOLE_DRIVER
@@ -19,10 +17,13 @@
 #define CONFIGURE_UNLIMITED_OBJECTS
 #define CONFIGURE_UNIFIED_WORK_AREAS
 #define CONFIGURE_MAXIMUM_TASKS             3
-
+#define CONFIGURE_INIT_TASK_STACK_SIZE    (2 * RTEMS_MINIMUM_STACK_SIZE)
+#define CONFIGURE_EXTRA_TASK_STACKS       (4 * RTEMS_MINIMUM_STACK_SIZE)
+#define CONFIGURE_INTERRUPT_STACK_SIZE    (1 * RTEMS_MINIMUM_STACK_SIZE)
 #define CONFIGURE_RTEMS_INIT_TASKS_TABLE
 
 #define CONFIGURE_INIT
 
 #include <rtems/confdefs.h>
 #endif
+
