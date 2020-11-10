@@ -13,7 +13,7 @@ rtems_gpio_irq_state button_handler(void *arg);
 
 rtems_task Init(rtems_task_argument ignored){
 
-rtems_interval  seconds = 1 * rtems_clock_get_ticks_per_second();
+rtems_interval  seconds = 5 * rtems_clock_get_ticks_per_second();
 
 rtems_gpio_initialize();
 rtems_gpio_bsp_select_input(0,4, &bsp_specific);
@@ -29,9 +29,10 @@ fflush(stdout);
 //polling
 while(1){
 	  if(rtems_gpio_bsp_get_value(0, 4)){
-		  putchar(1);
+		  printf("1");
+
 		  }else{
-		  putchar(0);
+			  printf("0");
 		  }
 	fflush(stdout);
 	rtems_task_wake_after(seconds);
