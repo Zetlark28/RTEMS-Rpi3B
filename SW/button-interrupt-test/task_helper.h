@@ -15,10 +15,14 @@
 #include <bsp/rpi-gpio.h>
 #include <bsp/linker-symbols.h>
 #include <bsp/mmu.h>
+#include <rtems.h>
 #include <rtems/score/armv4.h>
 #include <rtems/bspIo.h>
 #include <strings.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <inttypes.h>
+
 
 void *bsp_specific;
 
