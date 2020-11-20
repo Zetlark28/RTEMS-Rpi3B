@@ -2,9 +2,18 @@
 TODO:
 - scrivere una piccola introduzione della tesi (DONE)
 - vedere le API e provare a fare un piccolo programma
-	- accendi led
-	- hello world
-	- accensione led con ticker
+	- accendi led DONE
+	- hello world DONE
+	- accensione led con ticker  DONE
 - vedere come funziona kicad
 - vedere se si possono spegnere i driver video.
+
+
+12/11/2020
+TODO:
+- creare i programmi con le seguenti funzionalità:
+	- button gestito da interrupt (DONE)
+	- GPIO gestito di interrupt (DONE)
+	- attivare un task da interrupt 
+	
 	
