@@ -2,9 +2,17 @@
 TODO:
 - scrivere una piccola introduzione della tesi (DONE)
 - vedere le API e provare a fare un piccolo programma
-	- accendi led
-	- hello world
-	- accensione led con ticker
+	- accendi led (DONE)
+	- hello world (DONE)
+	- accensione led con ticker (DONE)
 - vedere come funziona kicad
 - vedere se si possono spegnere i driver video.
+
+15/11/2020
+
+- fare programma test GPIO interrupt e interrupts :
+	- bottone : schiaccio bottone -> attiva interrupt -> variabile globale interrupt = true -> legge in polling status interrupt -> se true scrive e interrupt = false
+	- attivare task tramite interrupt
+	
+- informarsi per le interfacce I2C, SPI
 	

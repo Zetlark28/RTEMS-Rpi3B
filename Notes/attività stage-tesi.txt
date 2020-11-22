@@ -35,6 +35,9 @@ ELENCO DELLE INTERFACCE DI INTERESSE
 - I2C
 - SPI
 - UART
+
+
+
 - Opzione Ethernet? NOPE
 - Opzione USB? NOPE
 
