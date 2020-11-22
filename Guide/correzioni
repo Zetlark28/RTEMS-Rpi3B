@@ -1,0 +1,4 @@
+CORREZIONI:
+
+PAGINA 4 :
+prima di far andare il comando minicom, bisogna far installare minicom sul computer con il comando "sudo apt-get install minicom"
