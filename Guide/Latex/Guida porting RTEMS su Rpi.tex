@@ -1,5 +1,7 @@
 \documentclass[10pt, a4paper]{article}
 \usepackage{geometry}
+\usepackage{graphicx}
+
  \geometry{
  a4paper,
  total={170mm,257mm},
@@ -27,7 +29,7 @@
 \pagenumbering{arabic}
 \begin{flushleft}
 \section{Introduzione}
-Guida per l'installazione di RTEMS RSB e della tool-suite per l' utilizzo del kernel di RTEMS per l'architettura ARM con target le BSP di Raspberry Pi 1 e Raspberry Pi 2, quest'ultima è compatibile con la Raspberry pi 3.
+Guida per l'installazione di RTEMS RSB e della tool-suite per l' utilizzo del kernel di RTEMS su architetture ARM, con target le BSP di Raspberry Pi 1 e Raspberry Pi 2, quest'ultima è compatibile con la Raspberry pi 3.
 
 Il RSB (RTEMS Source Builder) è un tool per buildare i pacchetti dai file sorgenti. Viene usato in RTEMS per buildare i suoi compilatori e OS.
 
@@ -35,8 +37,7 @@ La BSP (Board Support Package) è il codice di supporto per una specifica scheda
 
 Poichè RTEMS è un progetto open source ancora in sviluppo, al momento stanno sviluppando la v6, ma non è ancora stabile, per questo motivo in questa guida si installerà la v5.1 che è la versione stabile più recente.
 
-Durante questa guida viene usato il sistema operativo su cui si basa è Ubuntu LTS 20.04.
-
+Durante questa guida viene usato il sistema operativo Ubuntu LTS 20.04.
 
 \newpage
 \section{Configurazione iniziale del sistema}
@@ -74,7 +75,7 @@ A questo punto definiamo la struttura delle cartelle in cui verranno installati 
 Dopo aver preparato l'ambiente di sviluppo, possiamo procedere con l'installazione di RTEMS:
 \begin{itemize}
 
-\item Clonazione di RTEMS RSB e tool-suite : 
+\item Cloniamo i repository della RTEMS RSB e della tool-suite : 
 \begin{lstlisting}[language=bash] 
 $ mkdir - p $HOME/rtems-dev/src
 $ cd $HOME/rtems-dev/src
@@ -82,25 +83,29 @@ $ git clone -b 5.1 git://git.rtems.org/rtems-source-builder.git rsb
 $ git clone -b 5.1 git://git.rtems.org/rtems.git
 \end{lstlisting}
 
-\item Installiamo la tool suite utilizzando la RSB :
+\item Eseguiamo la build e l'installazione della tool suite utilizzando la RSB :
 \begin{lstlisting}[language=bash] 
 $ cd $HOME/rtems-dev/src/rsb/rtems
 $ ../source-builder/sb-set-builder --prefix= $HOME/quick-start/rtems/5 5/rtems-arm
 \end{lstlisting}
 
-\item Dopo aver completato l'installazione possiamo controllare che il C cross compiler di RTEMS funzioni : 
+\item Dopo aver completato l'installazione possiamo controllare che il C cross compiler di RTEMS sia stato installato correttamente utilizzando il seguente comando: 
 \begin{lstlisting}[language=bash] 
 $ $HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc --version
 \end{lstlisting}	
+e si ha come risultato:
+\begin{figure}[h!]
+\includegraphics[width=\linewidth]{rtems-gcc-version.png}
+\end{figure}
 
-\item Inseriamo nel variabili di  ambiente i comandi della toolchain e procediamo con il bootstrap : 
+\item Inseriamo nelle variabili di ambiente i comandi della toolchain e procediamo con il bootstrap : 
 \begin{lstlisting}[language=bash] 
-$ export PATH=$HOME/rtems-dev/rtems/5/bin:"$PATH"
+$ export PATH=$HOME/rtems-dev/rtems/5/bin:"$PATH" (3.1)
 $ cd $HOME/rtems-dev/src/rtems
 $ ./rtems-bootstrap
 \end{lstlisting}	
 	
-\item Adesso possiamo configurare ed installare le BSPs che ci servono  : 
+\item Adesso possiamo configurare ed installare le BSP che ci servono: 
 \begin{lstlisting}[language=bash] 
 $ mkdir -p $HOME/rtems-dev/build
 $ cd $HOME/rtems-dev/build
@@ -142,9 +147,9 @@ assicurarsi di avere come variabile di ambiente i comandi della tool-suite:
 \begin{lstlisting}[language=bash] 
 $ echo $PATH
 \end{lstlisting}
-se non è presente  '\$HOME/rtems-dev/rtems/5/bin' allora bisogna inserirla.
+se non è presente  '\$HOME/rtems-dev/rtems/5/bin' allora bisogna inserirla (vedi comando 3.1).
 
-posizionarsi nella cartella dove verrà creato il file .img:
+posizionarsi nella cartella dove vogliamo che venga creato il file .img:
 \begin{lstlisting}[language=bash] 
 $ cd $HOME/rtems-dev/rtems 
 \end{lstlisting}		
@@ -161,6 +166,7 @@ Per Rpi2 e Rpi3:
 $ arm-rtems5-objcopy -Obinary $HOME/rtems-dev/build/arm-rtems5/c/raspberrypi2/
 testsuites/samples/ticker.exe ticker.img
 \end{lstlisting}
+
 \item Configurare la SD card:
 copiamo nella scheda sd il firmware di Rpi (v4.19.11.3) compatibile con RTEMS. 
 Il firmware puo' essere scaricato da questo link:  \\
@@ -176,7 +182,9 @@ Creiamo nella sd il file config.txt che contiene il seguente testo:
 \end{lstlisting}
 Nel campo kernel mettiamo il nome del kernel file che vogliamo che rpi esegua.
 \end{itemize}
-	 	 
+	
+\newpage
+ 	 
 A questo punto siamo pronti con il test.
 
 Un comando per vedere la log della UART per debug è :
@@ -185,7 +193,11 @@ $ sudo minicom -b 115200 -D /dev/serial/
 by-id/<indirizzo periferica utilizzata per UART di solito un USB TTL>
 \end{lstlisting}
 
+
 Colleghiamo il UART del Rpi al computer e vediamo il risultato:
+\begin{figure}[h!]
+\includegraphics[width=\linewidth]{risultato-ticker.png}
+\end{figure}
 
 \newpage
 \section{Configurazione Eclipse C/C++} 
@@ -197,10 +209,15 @@ Una volta installato Eclipse C/C++ bisogna installare il plugin di RTEMS:
 \begin{itemize}
 \item Andiamo su Help> Install New Software
 \item Aggiungiamo come Software site quello di RTEMS, quindi clicchiamo add e inseriamo il seguente url \url{ftp://ftp.rtems.org/pub/rtems/eclipse/updates}
+\begin{figure}[h!]
+\includegraphics[width=\linewidth]{ftp-rtems-eclipse.png}
+\end{figure}
 \item Selezioniamo il plugin RTEMS CDT Support e installiamo
 \end{itemize}
 
 A questo punto abbiamo installato il plugin di RTEMS ed è pronto ad essere utilizzato.
+
+\newpage
 
 Quando creiamo un progetto RTEMS bisogna configurare la base e il BSP path di RTEMS in modo che si riesca ad utilizzare le librerie che ci servono:
 \begin{itemize}
@@ -209,13 +226,21 @@ Quando creiamo un progetto RTEMS bisogna configurare la base e il BSP path di RT
 \item BSP path : path dell'installazione della BSP, nel nostro caso home/<username>/rtems-dev/rtems/5/arm-rtems5/raspberrypi2 (o 1 se si utilizza Rpi1)
 \end{itemize}
 
+\begin{figure}[h!]
+\includegraphics[width=\linewidth]{rtems-path-eclipse.png}
+\end{figure}
+
+\newpage
+
 Abbiamo completato la configurazione del plugin di RTEMS su Eclipse C, adesso possiamo procedere alla creazione di un progetto RTEMS:
 \begin{itemize}
 \item New project$\rightarrow$ C Project
 \item Selezionare il project type corretto: Others$\rightarrow$ RTEMS Executable
 \item Selezionare la Toochain corretta : RTEMS Toolchain
 \end{itemize}
-
+\begin{figure}[h!]
+\includegraphics[width=\linewidth]{new-c-project.png}
+\end{figure}
 Possiamo controllare che il progetto è stato creato correttamente controllando le sue properties $\rightarrow$ C/C++ Build $\rightarrow$ RTEMS i path siano quelli corretti.
 
 \newpage
@@ -270,8 +295,8 @@ in system.c inseriamo il seguente codice :
 
 per una migliore comprensione del codice si rimanda ai seguenti link:
 \begin{itemize}
-\item per le api: \url{https://devel.rtems.org/browser/rtems/bsps/arm/raspberrypi}
-\item per la configurazione di rtems su codice (system.c): \url{https://ftp.rtems.org/pub/rtems/people/joel/docs-eng/c-user/configuring_a_system.html}
+\item per le api: \\ \url{https://devel.rtems.org/browser/rtems/bsps/arm/raspberrypi}
+\item per la configurazione di rtems su codice (system.c):\\  \url{https://ftp.rtems.org/pub/rtems/people/joel/docs-eng/c-user/configuring_a_system.html}
 \end{itemize}
 
 A questo punto possiamo buildare il programma, e nella cartella del progetto troveremo la cartella 'RTEMS Executable Configuration' che contiene il file .exe che utilizzeremo per creare il file .img da mettere nella scheda SD.
