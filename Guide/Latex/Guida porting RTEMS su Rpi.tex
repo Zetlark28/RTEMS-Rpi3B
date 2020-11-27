@@ -187,14 +187,29 @@ Nel campo kernel mettiamo il nome del kernel file che vogliamo che rpi esegua.
  	 
 A questo punto siamo pronti con il test.
 
-Un comando per vedere la log della UART per debug è :
+Per poter vedere la log della UART dobbiamo installare minicom:
+\begin{lstlisting}[language=bash] 
+$ sudo apt-get install minicom
+\end{lstlisting}
+
+Colleghiamo il convertitore UART alla Rpi :
+\begin{figure}[h!]
+\includegraphics[width=\linewidth]{rpi-uart-usb.png}
+\end{figure}
+\\
+dove i GPIO pin sono :
+\begin{figure}[h!]
+\includegraphics[width=\linewidth]{rpi-gpio.png}
+\end{figure}
+
+\newpage
+Colleghiamo la chiaveta USB al computer ed eseguiamo il comando per vedere la log della UART :
 \begin{lstlisting}[language=bash] 
 $ sudo minicom -b 115200 -D /dev/serial/
 by-id/<indirizzo periferica utilizzata per UART di solito un USB TTL>
 \end{lstlisting}
 
-
-Colleghiamo il UART del Rpi al computer e vediamo il risultato:
+il risultato dovrebbe essere simile a questo:
 \begin{figure}[h!]
 \includegraphics[width=\linewidth]{risultato-ticker.png}
 \end{figure}

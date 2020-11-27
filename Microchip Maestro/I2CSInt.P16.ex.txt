@@ -1,0 +1,133 @@
+;###############################################################################;
+;# TITLE   "I2C Master General Purpose Library Checking Software"               ;
+;#                                                                              ;
+;#                                                                              ;
+;#      Program:        I2CSInt.ex.txt                                          ;
+;#      Version:        1.0                                                     ;
+;#      Revision Date:                                                          ;
+;#      Author:         Vidyadhar                                               ; 
+;#                                                                              ;
+;#                                                                              ;
+;# Program demonstrates use of I2C Slave general purpose library module.        ;
+;# This program transmits 4 bytes of Data on read command from Master           ;
+;# This program receives 4 bytes of Data on write command from Master           ;
+;# Timer0 is used for error recovery purpose. It is initialized to interrupt    ;
+;# every 1 ms. The system clock is taken as 4 MHz.                              ;
+;###############################################################################;
+                                                ;
+      list p=16f877                             ;
+        #include <P16F877.INC>                  ;
+                                                ;
+;***********************************************;      
+        #include "I2CSInt.inc"                  ;This include all required files and variables.            
+;***********************************************;
+
+        UDATA_SHR
+
+DupW    res     1
+DupStat res     1
+
+;***********************************************;
+                                                ;
+Starthere   code    0x0000                      ;
+                                                ;
+        goto    Start                           ;
+;-----------------------------------------------;
+                                                ;
+intr        code    0x0004                      ;
+                                                ;
+        goto    ISRHandler                      ;
+                                                ;
+;-----------------------------------------------;
+Strt        code                                ;
+                                                ;
+Start:                                          ;
+                                                ;
+      ;                                         ;
+      ;                                         ;
+      ;                                         ;
+                                                ;
+        BANKSEL TRISC                           ;
+        bsf     TRISC,4                         ;SDA is made i/p
+        bsf     TRISC,3                         ;SCL is made i/p
+                                                ;
+        bcf     OPTION_REG,T0CS                 ;Timer0 with system clock
+        movlw   001h                            ;Prescaler 4 (Timer0 timeout = ~1 ms at 4 MHz)
+        iorwf   OPTION_REG,f                    ;
+                                                ;
+        PAGESEL I2CSIntInit                     ;
+        call    I2CSIntInit                     ;to Initialise SSP MOdule
+                                                ;
+; To Send 4 bytes Data1, Data2, Data3, Data4    ;
+; to the Master                                 ;
+                                                ;
+        ;                                       ;
+        ;                                       ;
+        ;                                       ;
+        ;                                       ;
+I2CCommn                                        ;
+        PAGESEL I2CSIntPut                      ;
+        movlw   000h                            ;Data1;
+        call    I2CSIntPut                      ;
+                                                ;
+        PAGESEL I2CSIntPut                      ;
+        movlw   001h                            ;Data2;
+        call    I2CSIntPut                      ;
+                                                ;
+        PAGESEL I2CSIntPut                      ;
+        movlw   002h                            ;Data3;
+        call    I2CSIntPut                      ;
+                                                ;
+        PAGESEL I2CSIntPut                      ;
+        movlw   003h                            ;Data4;
+        call    I2CSIntPut                      ;
+rechk                                           ;
+        btfss   vI2CSIntStatus,I2CSTx           ;
+        goto    I2CRx                           ;
+                                                ;
+        ;                                       ;
+        ;                                       ;
+        ;                                       ;
+        ;                                       ;
+        goto    rechk                           ;
+                                                ;
+I2CRx:                                          ;
+        btfsc   vI2CSIntStatus,I2CSRxBufEmpty   ;
+        goto    rechk                           ;
+                                                ;
+                                                ;
+; To Receive from the Mastar                    ;
+                                                ;
+        PAGESEL I2CSIntGet                      ;
+        call      I2CSIntGet                    ;Data is present in 'W' Register      
+                                                ;
+        goto      I2CRx                         ;
+                                                ;
+        ;                                       ;
+        ;                                       ;
+        ;                                       ;
+        ;                                       ;
+                                                ;
+        goto      $                             ;
+;-----------------------------------------------;
+ISRHandler:                                     ;
+                                                ;
+	    movwf	DupW				            ;
+	    swapf	STATUS,w			            ;
+	    movwf	DupStat				            ;
+        ;                                       ;
+        PAGESEL I2CSIntISR                      ;
+        call    I2CSIntISR                      ;
+        ;                                       ;
+        ;                                       ;
+        ;                                       ;
+	    swapf	DupStat,w			            ;
+	    movwf	STATUS				            ;
+	    swapf	DupW,f				            ;
+	    swapf	DupW,w				            ;
+        retfie                                  ;
+                                                ;
+;***********************************************;
+      end                                       ;
+;***********************************************;
+
