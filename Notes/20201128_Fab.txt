@@ -1,0 +1,47 @@
+
+i^2c:
+task che legge la variabile (tensione) 
+settare dei parametri
+
+LEGGERE CAP 4
+
+240 campioni al sec.
+
+
+
+con bit =1 non lo prendo.
+Valore negativo non lo considero
+non andrò mai negativo poichè ho Vin-
+PGA = guadagno
+
+se ho un 1 ho un po di rumore
+
+
+un millivolt a bit.. il numero che leggo è la tensione.
+
+
+
+
+LEGGERE CAP 5
+se uso la continuos non uso la configuration register
+
+
+devo fare solo lettura
+
+1101000 indirizzo della periferica
+
+futuro:
+a noi serve conversione one-shot
+
+
+
+task lettura :
+- faccio lettura gpio -> faccio la lettura I2C
+
+- chiedo lettura.
+- fa lettura 3 o 5 (one-shot), solo al risveglio 
+
+
+1 byt e 2 byte metto in 16 e faccio un AND -> 
+
+
