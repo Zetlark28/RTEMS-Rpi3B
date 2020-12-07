@@ -29,21 +29,21 @@
 \pagenumbering{arabic}
 \begin{flushleft}
 \section{Introduzione}
-Guida per l'installazione di RTEMS RSB e della tool-suite per l' utilizzo del kernel di RTEMS su architetture ARM, con target le BSP di Raspberry Pi 1 e Raspberry Pi 2, quest'ultima è compatibile con la Raspberry pi 3.
+Guida per l'installazione di RTEMS RSB e della tool-suite per l' utilizzo del kernel di RTEMS su architetture ARM, con target i BSP di Raspberry Pi 1 e Raspberry Pi 2, quest'ultimo è compatibile con la Raspberry pi 3.
 
-Il RSB (RTEMS Source Builder) è un tool per buildare i pacchetti dai file sorgenti. Viene usato in RTEMS per buildare i suoi compilatori e OS.
+L' RSB (RTEMS Source Builder) è un tool utile per buildare i moduli di RTEMS e delle BSP da utilizzare.
 
 La BSP (Board Support Package) è il codice di supporto per una specifica scheda, esso contiene librerie di RTEMS utili per l'utilizzo della scheda.
 
-Poichè RTEMS è un progetto open source ancora in sviluppo, al momento stanno sviluppando la v6, ma non è ancora stabile, per questo motivo in questa guida si installerà la v5.1 che è la versione stabile più recente.
+RTEMS è un progetto open source in perenne sviluppo, al momento stanno sviluppando la v6 ma non è ancora stabile, e al momento della redazione di questa guida si installerà la v5.1 che è release stabile più recente.
 
-Durante questa guida viene usato il sistema operativo Ubuntu LTS 20.04.
+In questa guida viene usato il sistema operativo Ubuntu LTS 20.04.
 
 \newpage
 \section{Configurazione iniziale del sistema}
-Prima di iniziare l'installazione di RTEMS RSB e tool-suite bisogna configurare l'ambiente di sviluppo.
+Prima di iniziare l'installazione di RTEMS RSB e della tool-suite bisogna configurare l'ambiente di sviluppo.
 
-Procediamo con l'installazione dei seguenti pacchetti:
+Procediamo con l'installazione dei seguenti packages:
 \begin{itemize}
 \item  build-essential : 
 \begin{lstlisting}[language=bash] 
@@ -63,11 +63,11 @@ A questo punto definiamo la struttura delle cartelle in cui verranno installati 
 
 \begin{itemize}
 \item \$HOME/rtems-dev  : base directory
-\item \$HOME/rtems-dev : base directory dove vengono clonati da git la tool-suite e la RSB di RTEMS
+\item \$HOME/rtems-dev/src : base directory dove vengono clonati da git il codice sorgente di RTEMS e la RSB di RTEMS
 \item \$HOME/rtems-dev/src/rsb : RTEMS source builder
 \item \$HOME/rtems-dev/src/rtems : RTEMS tool-suite
-\item \$HOME/rtems-dev/rtems/ : dove verrà installata la RTEMS tool-suite
-\item \$HOME/rtems-dev/build : dove verranno installate le BSP di Rpi1 e Rpi2
+\item \$HOME/rtems-dev/rtems/ : dove verrà installata la tool-suite di RTEMS 
+\item \$HOME/rtems-dev/build : dove verranno installate i BSP di Rpi1 e Rpi2
 \end{itemize}
 \newpage
 \section{Installazione RTEMS}
@@ -75,7 +75,7 @@ A questo punto definiamo la struttura delle cartelle in cui verranno installati 
 Dopo aver preparato l'ambiente di sviluppo, possiamo procedere con l'installazione di RTEMS:
 \begin{itemize}
 
-\item Cloniamo i repository della RTEMS RSB e della tool-suite : 
+\item Cloniamo i repository del RTEMS RSB e del codice sorgente di RTEMS : 
 \begin{lstlisting}[language=bash] 
 $ mkdir - p $HOME/rtems-dev/src
 $ cd $HOME/rtems-dev/src
@@ -124,7 +124,7 @@ Svolti tutti i passaggi precedenti abbiamo come risultato RTEMS installato sul c
 \newpage
 \section{Prova sample test RTEMS}
 
-Installando le BSP, RTEMS ci fornisce dei sample test .exe da cui possiamo generare i file .img e utilizzarli per testare il funzionamento della raspberry pi
+Installando le BSP, RTEMS ci fornisce dei sample test .exe da cui possiamo generare i file .img e utilizzarli per testare il funzionamento della raspberrypi
 
 I sample test sono in : 
 \begin{itemize}

@@ -1,0 +1,488 @@
+;###############################################################################;
+;# TITLE   "I2C Master General Purpose Library Checking Software"               ;
+;#                                                                              ;
+;#                                                                              ;
+;#      Program:        I2CMPol.ex.txt                                          ;
+;#      Version:        1.0                                                     ;
+;#      Revision Date:                                                          ;
+;#      Author:         Vidyadhar                                               ; 
+;#                                                                              ;
+;#                                                                              ;
+;# Program demonstrates use of I2C Master general purpose library module.       ;
+;# This program writes 16 bytes of Data into the EEPROM 24LC256 from the        ;
+;# location 0000h and reads them back and copy into the buffer 'I2CReadData'    ;
+;###############################################################################;
+                                                ;
+	list        p=18f452				        ;
+    #include    <P18F452.INC>			        ;
+                                                ;
+;***********************************************;        
+    #include    "I2CMPol.inc"                   ;This include all required files and variables.                
+;***********************************************;
+
+        UDATA
+I2CTxCnt        res     .1                      ;
+I2CRxCnt        res     .1                      ;
+I2CReadData     res     .16                     ;
+Temp            res     .1                      ;
+                        
+;***********************************************;
+                                                ;
+Starthere       code    0x0000                  ;
+                                                ;
+        goto    Start                           ;
+;-----------------------------------------------;
+
+;-----------------------------------------------;
+Strt    code                                    ;
+                                                ;
+I2CWait:                                        ;Wait till I2C Bus is Idle
+        call    I2CMPolIsIdle                   ;
+                                                ;
+        tstfsz  WREG                            ;
+        bra     I2CWait                         ;
+        return                                  ;
+;-----------------------------------------------;
+I2CWaitTillDataIsReady:                         ;Wait till Data is Ready
+        call    I2CMPolIsDataReady              ;
+                                                ;
+        tstfsz  WREG                            ;
+        bra     I2CWaitTillDataIsReady          ;
+        return                                  ;
+;-----------------------------------------------;
+GetI2CTxData:                                   ;
+        addwf   PCL,f                           ;These are the 16 bytes of data to be
+        nop                                     ;written into EEPROM
+        retlw   .15                             ;
+        retlw   .14                             ;
+        retlw   .13                             ;
+        retlw   .12                             ;
+        retlw   .11                             ;
+        retlw   .10                             ;
+        retlw   .09                             ;
+        retlw   .08                             ;
+        retlw   .07                             ;
+        retlw   .06                             ;
+        retlw   .05                             ;
+        retlw   .04                             ;
+        retlw   .03                             ;
+        retlw   .02                             ;
+        retlw   .01                             ;
+        retlw   .00                             ;
+                                                ;
+;-----------------------------------------------;
+                                                ;
+ChkI2CNoAckErr  macro                           ;Check whether Ack received.
+        xorlw   I2CMErrNoAck                    ;
+        bz      I2CNoAckErr                     ;If No Ack received goto I2CNoAckErr
+                                                ;
+        endm                                    ;
+;-----------------------------------------------;
+                                                ;
+ChkI2CWriteCollisionErr macro                   ;
+        xorlw   I2CMErrWriteCollision           ;Check whether Write Collision occured.
+        bz      I2CWriteCollisionErr            ;If Write Collision has occured goto I2CWriteCollisionErr
+                                                ;
+        endm                                    ;
+;-----------------------------------------------;
+;Following lines are not required for single    ;
+;master mode. Uncomment following lines only for;
+;Multi-master mode                              ;
+;-----------------------------------------------;
+;ChkI2CBusCollisionErr macro                    ;
+        ;xorlw  I2CMErrBusCollision             ;Check whether Bus Collision occured?
+        ;bz     I2CBusColErr                    ;If Bus Collision has occured goto I2CBusColErr.
+                                                ;
+        ;endm                                   ;
+;-----------------------------------------------;
+                                                ;
+;***********************************************;
+Start:                                          ;
+                                                ;
+        ;                                       ;
+        ;                                       ;
+        ;                                       ;
+                                                ;
+                                                ;
+                                                ;
+        call    I2CMPolInit                     ;Initialise MSSP MOdule
+                                                ;
+;-----------------------------------------------;
+; To Write 16 bytes Data into EEPROM whose      ;
+; address (Slave Address) is A0 from the        ;
+; location 0000h                                ;
+                                                ;
+I2CTransmit                                     ;
+        call    I2CWait                         ;
+                                                ;
+        mI2CMPolStart                           ;Send Start
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+        movlw   0a0h                            ;SlaveAddress(with write bit)
+        call    I2CMPolPut                      ;
+                                                ;
+        ChkI2CWriteCollisionErr                 ;Check whether Write Collision has occured
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+        call    I2CMPolIsAckReceived            ;Check whether Ack received
+                                                ;If blocking function option is selected
+        ChkI2CNoAckErr                          ;
+                                                ;
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+        movlw   000h                            ;LocationAddress_High;
+        call    I2CMPolPut                      ;
+                                                ;
+        ChkI2CWriteCollisionErr                 ;Check whether Write Collision has occured
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+        call    I2CMPolIsAckReceived            ;Check whether Ack received
+                                                ;
+        ChkI2CNoAckErr                          ;
+                                                ;
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+        movlw   000h                            ;LocationAddress_Low;
+        call    I2CMPolPut                      ;
+                                                ;
+        ChkI2CWriteCollisionErr                 ;Check whether Write Collision has occured
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+        call    I2CMPolIsAckReceived            ;Check whether Ack received
+                                                ;
+        ChkI2CNoAckErr                          ;
+                                                ;
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+        BANKSEL I2CTxCnt                        ;
+        movlw   .16                             ;Load I2CTxCnt with the number of bytes to be transmitted
+        movwf   I2CTxCnt                        ;
+                                                ;
+I2CNxtBytTx                                     ;
+        movf    I2CTxCnt,w                      ;Data
+        btfsc   STATUS,Z                        ;
+        goto    I2CStop                         ;
+                                                ;
+        call    GetI2CTxData                    ;Getting data to be written into EEPROM
+                                                ;
+        call    I2CMPolPut                      ;
+                                                ;
+        ChkI2CWriteCollisionErr                 ;Check whether Write Collision has occured
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+        call    I2CMPolIsAckReceived            ;Check whether Ack received
+                                                ;
+        ChkI2CNoAckErr                          ;
+                                                ;
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+;-----------------------------------------------;
+        decf    I2CTxCnt,f                      ;
+        goto    I2CNxtBytTx                     ;
+                                                ;
+;-----------------------------------------------;
+I2CStop                                         ;
+        mI2CMPolStop                            ;
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+;-----------------------------------------------;
+                                                ;
+        ;                                       ;To Write to be happened 10ms is required.
+        ;                                       ;Give that delay before Read
+        ;                                       ;
+        ;                                       ;
+                                                ;
+        goto    I2CReceive                      ;
+                                                ;
+;-----------------------------------------------;
+I2CNoAckErr                                     ;
+        goto    I2CStop                         ;Free the Bus if NoAck is received from Slave
+                                                ;
+;-----------------------------------------------;
+I2CWriteCollisionErr                            ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+        call    I2CMPolIsAckReceived            ;Check whether Ack received
+                                                ;
+        ChkI2CNoAckErr                          ;
+                                                ;
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+;-----------------------------------------------;
+        goto    I2CNxtBytTx                     ;Repeat transmission of the unfinished byte
+                                                ;
+;***********************************************;
+; To Read 16 bytes from EEPROM starting from the;
+; locationand 0000h and saving them in  a buffer;
+                                                ;
+I2CReceive                                      ;
+        mI2CMPolStart                           ;Send Start
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+                                                ;
+        movlw   0a0h                            ;SlaveAddress(with write bit)
+        call    I2CMPolPut                      ;
+                                                ;
+        ChkI2CWriteCollisionErr                 ;
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+        call    I2CMPolIsAckReceived            ;Check whether Ack received
+                                                ;
+        ChkI2CNoAckErr                          ;
+                                                ;
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+        movlw   000h                            ;Send LocationAddress_High;
+        call    I2CMPolPut                      ;
+                                                ;
+        ChkI2CWriteCollisionErr                 ;
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+        call    I2CMPolIsAckReceived            ;Check whether Ack received
+                                                ;
+        ChkI2CNoAckErr                          ;
+                                                ;
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+        movlw   000h                            ;Send LocationAddress_Low;
+        call    I2CMPolPut                      ;
+                                                ;
+        ChkI2CWriteCollisionErr                 ;
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+        call    I2CMPolIsAckReceived            ;Check whether Ack received
+                                                ;
+        ChkI2CNoAckErr                          ;
+                                                ;
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+        mI2CMPolReStart                         ;Send ReStart
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+        movlw   0a1h                            ;Send SlaveAddress(with read bit)
+        call    I2CMPolPut                      ;
+                                                ;
+        ChkI2CWriteCollisionErr                 ;
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+        call    I2CMPolIsAckReceived            ;Check whether Ack received
+                                                ;
+        ChkI2CNoAckErr                          ;
+                                                ;
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+        BANKSEL I2CRxCnt                        ;
+        clrf    I2CRxCnt                        ;Clear I2CRxCnt-Read Pointer offset
+                                                ;
+I2CNxtRx                                        ;
+        mI2CMPolEnableReceiver                  ;Enable the receiver
+                                                ;
+        call    I2CWaitTillDataIsReady          ;Wait till Data is ready
+                                                ;If blocking function option is selected call 'I2CMPolIsDataReady'
+        call    I2CMPolGet                      ;Read received value in W
+                                                ;
+        lfsr    FSR0,I2CReadData                ;I2CReadData is the starting location
+                                                ;of the buffer, where the read data
+                                                ;should be stored
+        movwf    Temp                           ;
+                                                ;
+        movf    I2CRxCnt,w                      ;Read Pointer
+        addwf   FSR0L                           ;
+        btfsc   STATUS,C                        ;
+        incf    FSR0H                           ;
+                                                ;
+        movf    Temp,w                          ;
+        movwf   INDF0                           ;Received data is stored in buffer
+                                                ;
+        incf    I2CRxCnt,f                      ;increment read pointer offset
+        movf    I2CRxCnt,w                      ;
+        xorlw   .16                             ;check whether 16bytes received
+        btfss   STATUS,Z                        ;
+        goto    SendI2CAck                      ;send Ack if some more bytes are to be received
+                                                ;
+        goto    SendI2CNoAck                    ;send NoAck if all 16 bytes received
+                                                ;
+;-----------------------------------------------;
+SendI2CAck                                      ;
+        mI2CMPolAck                             ;
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+;-----------------------------------------------;
+        goto    I2CNxtRx                        ;
+                                                ;
+;-----------------------------------------------;
+SendI2CNoAck                                    ;
+        mI2CMPolAck                             ;
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+                                                ;
+        mI2CMPolStop                            ;
+                                                ;
+        call    I2CWait                         ;Wait till bus becomes Idle
+                                                ;If blocking function option is selected call 'I2CMPolIsIdle'
+;-----------------------------------------------;
+;Following two lines are not required for       ;
+;single master mode. Uncomment following lines  ;
+;only for Multi-master mode                     ;
+;-----------------------------------------------;
+       ;call    I2CMPolIsBusCollision           ;Check whether Bus Collision has occured
+                                                ;
+       ;ChkI2CBusCollisionErr                   ;
+                                                ;
+;-----------------------------------------------;
+                                                ;
+        mI2CMPolDisable                         ;Disable MSSP Module
+                                                ;
+;-----------------------------------------------;
+        ;                                       ;
+        ;                                       ;
+        ;                                       ;
+        ;                                       ;
+                                                ;
+I2CBusColErr:                                   ;
+        goto    $                               ;User can write his own logic for 
+                                                ;bus collision
+;-----------------------------------------------;
+
+;***********************************************;
+        end                                     ;
+;***********************************************;
+
