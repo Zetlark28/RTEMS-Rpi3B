@@ -1,0 +1,17 @@
+1-	Introduzione
+		Obiettivi
+		Contesto di riferimento
+		Applicazione
+2- Tecnologie
+		RTEMS
+		Raspberrypi
+		Eclipse
+3- Porting di RTEMS su Rpi
+	Integrazione HW e SW}
+4- Attività sperimentale
+		Obiettivi
+		Test set-up
+		Test application SW
+		Risultati finali
+5- Conclusioni
+Ringraziamenti

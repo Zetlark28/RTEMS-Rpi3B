@@ -1,0 +1,29 @@
+\documentclass[a4paper,12pt,titlepage,oneside]{book}
+\title{Bozza introduzione}
+\author{Clark Ezpeleta}
+\begin{document}
+\maketitle
+\newpage
+\chapter*{Prefazione}
+
+Lo scopo del mio lavoro consisteva nel porting del sistema operativo RTEMS su Raspberrypi e nella creazione di piccoli programmi per testare il funzionamento dei GPIO, USART, I2C, SPI e l'utilizzo degli interrupts.
+Per poter svolgere il porting ho dato una lettura al RTEMS User Manual[1] per comprendere meglio i concetti di RSB(RTEMS Source Builder) e BSP (board support packages), e ho utilizzato la guida fornita da un utente - AlanC,  che ha già svolto il porting per la versione 4.11.
+Purtroppo la guida fornita non era totalmente corretta, poichè datata a Marzo 2013 ed era stata scritta per la versione di RTEMS precedente a quella che dovevo utilizzare, cioè la versione 5.1. 
+Per questo motivo dopo aver effettuato correttamente il porting ho creato una guida con scritto tutti i passaggi effettuati integrando le correzioni necessarie rilevate. \\
+Oltre alla Raspberrypi 3B+ che mi è stata fornita, per poter creare i programmi di test dell'interfaccia I2C e SPI erano necessari dei componenti aggiuntivi che mi sono stati gentilmente offerti dalla Microchip.\\\\
+Premesso ciò, ho suddiviso la mia tesi nei seguenti capitoli:
+
+\begin{itemize}
+    \item \textbf{Capitolo 1} - in questo capitolo vengono descritti gli obiettivi della tesi, il contesto di riferimento e l'applicazione .
+    \item \textbf{Capitolo 2} - in questo capitolo vengono descritte le tecnologie utilizzate.
+    \item \textbf{Capitolo 3} - in questo capitolo viene descritta tutta l'attività di porting svolta e la definizione della toolchain per poter realizzare applicazioni RTEMS.
+    \item \textbf{Capitolo 4} - in questo capitolo vengono descritti i drivers di RTEMS e come le ho provate.
+    \item \textbf{Capitolo 5} - in questo capitolo viene descritto ciò che si vuole testare, in che modo si vuole testare e i motivi per cui si vuole testare quella specifica interfaccia. Perciò vengono descritti i componenti aggiuntivi forniti da Microchip, e l'architettura generale dei programmi di prova.
+    \item \textbf{Capitolo 6} - Ringraziamenti.
+    \end{itemize} 
+La tesi sarà utile alla BIS-Italia, fazione italiana della British Interplanetary Society società storica britannica,di cui sono membro, che mi ha seguito durante lo stage e integrerà ciò al progetto di creazione di una replica in scala 1:3 di ExoMars Rover che verrà utilizzato per divulgazione.
+Tutto il lavoro è stato svolto con l'aiuto dei membri della BIS-Italia e la collaborazione con Microchip. 
+
+
+
+\end{document}
