@@ -17,6 +17,7 @@
 }
 \title{Guida porting RTEMS su Raspberry Pi}
 \author{Clark Ezpeleta}
+\date{}
 \usepackage{parskip}
 \usepackage{listings}
 
@@ -86,7 +87,7 @@ $ git clone -b 5.1 git://git.rtems.org/rtems.git
 \item Eseguiamo la build e l'installazione della tool suite utilizzando la RSB :
 \begin{lstlisting}[language=bash] 
 $ cd $HOME/rtems-dev/src/rsb/rtems
-$ ../source-builder/sb-set-builder --prefix= $HOME/quick-start/rtems/5 5/rtems-arm
+$ ../source-builder/sb-set-builder --prefix= $HOME/rtems-dev/rtems/5 5/rtems-arm
 \end{lstlisting}
 
 \item Dopo aver completato l'installazione possiamo controllare che il C cross compiler di RTEMS sia stato installato correttamente utilizzando il seguente comando: 
@@ -110,7 +111,7 @@ $ ./rtems-bootstrap
 $ mkdir -p $HOME/rtems-dev/build
 $ cd $HOME/rtems-dev/build
 $ $HOME/rtems-dev/src/rtems/configure \
-        --prefix=$HOME/quick-start/rtems/5 \
+        --prefix=$HOME/rtems-dev/rtems/5 \
 	--target=arm-rtems5 \
 	--enable-rtemsbsp="raspberrypi raspberrypi2"\
 	--enable-tests=samples --enable-networking --enable-posix
