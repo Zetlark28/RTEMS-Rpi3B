@@ -18,6 +18,8 @@
 \usepackage{graphicx} %insert image
 \graphicspath{ {./images/} }
 \usepackage{wrapfig} %for wrap figures
+\usepackage{graphicx} %for size figures
+\usepackage{subcaption} %for position figures
 
 \usepackage{listings} %for code format
 
@@ -32,28 +34,25 @@
 
 \addcontentsline{toc}{chapter}{Introduzione} 
 Il lavoro che ho svolto ha due obiettivi principali: il 'porting' di RTEMS su Raspberry Pi e la creazione di applicativi RTEMS per validare il corretto funzionamento delle interfacce GPIO, UART, I2C, SPI  e l'utilizzo degli interrupts tramite le API di RTEMS.\\
-%Lo scopo del mio lavoro consiste nel porting di RTEMS su Raspberry Pi e nella creazione di applicativi RTEMS  per testare il funzionamento delle interfacce GPIO, UART, I2C, SPI e l'utilizzo degli interrupts.
+%Lo scopo del mio lavoro consiste nel 'porting' di RTEMS su Raspberry Pi e nella creazione di applicativi RTEMS  per testare il funzionamento delle interfacce GPIO, UART, I2C, SPI e l'utilizzo degli interrupts.
 
 Per poter svolgere il 'porting' ho fatto riferimento al RTEMS User Manual\cite{rtemsUM}, per comprendere meglio i concetti di RSB(RTEMS Source Builder) e BSP (board support packages), 
-ed ho utilizzato la guida fornita da ing. Basile \cite{giorgio}, di BIS-Italia, che raccoglie tutti i passaggi esposti sul blog di Alan Tech per il porting della versione 4.11.\\
+ed ho utilizzato la guida fornita da ing. Basile \cite{giorgio}, di BIS-Italia, che raccoglie tutti i passaggi esposti sul blog di Alan Tech per il 'porting' della versione 4.11.\\
 %ed ho utilizzato la guida fornita da AlanC trovata sul suo blog \cite{alanT} in cui viene descritto il porting per la versione 4.11.\\
 %Purtroppo la guida non è totalmente corretta, poichè datata a Marzo 2013 ed è stata scritta per la versione di RTEMS precedente a quella che ho utilizzato, cioè la 5.1 che è la più recente e stabile. \\
-Purtroppo i passaggi illustrati sul blog non sono totalmente corretti, poichè sono per il porting della versione di RTEMS precedente a quella che ho utilizzato, cioè la 5.1 che è la più recente e stabile.
+Purtroppo i passaggi illustrati sul blog non sono totalmente corretti, poichè sono per il 'porting' della versione di RTEMS precedente a quella che ho utilizzato, cioè la 5.1 che è la più recente e stabile.
 Il 'porting' puo' essere definito corretto, se alla fine della procedura si riesce a caricare uno degli applicativi di test forniti da RTEMS, su Raspberry Pi senza errori.
-%Per questo motivo, dopo esser riuscito a caricare su RPi uno degli applicativi di test, forniti da RTMES, senza errori di compilazione e computazione, mi sono occupato della creazione di 
 Dopo aver effettuato correttamente il 'porting', ho creato una guida in italiano  che raggruppa tutti i passaggi effettuati integrando le correzioni necessarie, ed è stata corretta anche la guida di ing. Basile \cite{giorgio5}.\\
 Dopo aver impostato l'ambiente di lavoro ho iniziato a creare gli applicativi RTEMS da eseguire sulla Raspberry Pi.\\
-Per poter creare gli applicativi RTEMS ho dovuto  familiarizzare con il linguaggio C, leggere l'RTEMS Classi API Guide \cite{rtemsCAG} ed analizzare i codici sorgente di esempio trovati nel git repository di asuol\cite{asuol} per poter compredere l'utilizzo delle API. \\
+Per poter creare gli applicativi RTEMS ho dovuto  familiarizzare con il linguaggio C, leggere l'RTEMS Classic API Guide \cite{rtemsCAG} ed analizzare i codici sorgente di esempio trovati nel git repository di asuol\cite{asuol} per poter compredere l'utilizzo delle API. \\
 Tutto il lavoro è stato eseguito in modalità "smart-working", per questo motivo mi è stata messa a disposizione da BIS-Italia la scheda Raspberry Pi 3B+ per poter effettuare l'attività.Microchip Technologies ha gentilmente offerto dei componenti aggiuntivi utili per gli applicativi RTEMS di test dell'interfaccia I2C e SPI.\\
 Oltre all'attività software ho dovuto eseguire una piccola attività hardware, cioè creare dei circuiti saldando i vari componenti e utilizzando la breadboard in modo da poterli collegare alla Raspberry Pi, per fare ciò ho seguito gli schemi elettrici che mi ha inviato ing. Bernardini e ho letto i datasheet dei componenti dell'interfaccia I2C \cite{microchipMCP3425} \cite{microchipADC} e  SPI \cite{microchipMCP4822} \cite{microchipMSOP10-8} in modo da comprendere il loro funzionamento e poter creare i driver.\\
-%Con il materiale ricevuto ho costruito, grazie agli schemi elettrici che mi ha inviato Fabrizio Bernardini, dei circuiti saldando i vari componenti ed utilizzando la breadboard in modo da poterli collegare alla Raspberry Pi.
-%Oltre agli schemi elettrici ho letto i datasheet dei componenti I2C \cite{microchipMCP3425} \cite{microchipADC} e  SPI \cite{microchipMCP4822} \cite{microchipMSOP10-8} ricevuti dalla Microchip, in modo da comprendere il loro funzionamento e creare i driver.
-%%Grazie all'aiuto di Fabrizio Bernardini sono riuscito a creare i circuiti elettrici su cui far girare i programmi
+
 Premesso tutto ciò ho suddiviso la mia relazione nei seguenti capitoli:
 
 \begin{itemize}
     \item \textbf{Capitolo 1} - in questo capitolo vengono descritte le principali tecnologie utilizzate durante il mio lavoro. Innanzitutto viene descritto RTEMS che è il sistema operativo su cui si basa tutta l'attività, dopodichè viene  descritta la Raspberry Pi su cui verranno eseguiti gli applicativi RTEMS, ed infine viene descritto Eclipse che è l'IDE utilizzato per creare gli applicativi.
-    \item \textbf{Capitolo 2} - in questo capitolo viene descritta tutta l'attività di porting e la definizione della toolchain per poter realizzare applicativi RTEMS. Vengono esposte tutte le problematiche rilevate e le loro soluzioni. 
+    \item \textbf{Capitolo 2} - in questo capitolo viene descritta tutta l'attività di 'porting' e la definizione della toolchain per poter realizzare applicativi RTEMS. Vengono esposte tutte le problematiche rilevate e le loro soluzioni. 
     \item \textbf{Capitolo 3} - in questo capitolo vengono descritti le API che RTEMS ha a disposizione, la loro struttura e in che modo li ho testati e per quali motivi si è scelto di testarli.
     \item \textbf{Capitolo 4} - in questo capitolo viene descritta l'attività software che si basa sulla creazione degli applicativi RTEMS per testare il corretto funzionamento delle API di RTEMS. Viene esposto anche una descrizione dei componenti aggiuntivi offerti da Microchip di cui ho creato i driver per poterli utilizzare con RTEMS.
     \item \textbf{Capitolo 5} - in questo capitolo viene descritto ciò che si è raggiunto e la possibile estensione del mio lavoro.
@@ -69,9 +68,8 @@ RTEMS sta per Real-Time Executive MultiProcessor System ed è un sistema operati
 Attualmente viene utilizzato in molti settori tra cui quello aereospaziale, infatti è stato utilizzato in alcune missioni spaziali sia a livello di on-board computer che come computer embedded in altre attività di volo
 %ad esempio sul MRO (Mars Reconnaissance Orbiter) è in esecuzione un applicativo RTEMS che controlla l' Electra UHT Transceiver (EUT) che serve per la comunicazione tra Marte e la Terra . \\
 RTEMS è  stato validato dall'ESA, European Space Agency, ciò vuol dire che sono stati scritti dei programmi che riproducono gli scenari critici (ad esempio la gestione di molti device oppure la gestione e l'esecuzione concorrente dei task), e sono stati eseguiti sul sistema operativo per poter verificare il suo corretto funzionamento in quei casi. La validazione viene tutt'ora aggiornata poiché è un sistema operativo che è in continua evoluzione e avrà più funzionalità con il passare del tempo.\\
-RTEMS non è un sistema operativo a sé stante, usato epr caricare altri programmi, ma è un executive che viene compilato con l'applicaizone in un unico codice monolitico da eseguire.
-%RTEMS è un Real-Time Executive ciò vuol dire che si possono creare applicativi RTEMS che fanno da kernel alla macchina su cui vengono eseguiti. Gli applicativi prendono il controllo su tutto la scheda.\\
-%Un real-time multitasking executive è un applicativo che è formato da un insieme di task indipendenti tra di loro.Ogni task sono internamente sincroni, ma diversi tasks possono essere eseguiti indipendentemente, risultando un processo asincrono nell insieme.
+RTEMS non è un sistema operativo a sé stante, usato epr caricare altri programmi, ma è un executive che viene compilato con l'applicazione in un unico codice monolitico da eseguire.
+
 \newpage
 RTEMS puo' essere visto come un insieme di direttive raggruppate in una serie di manager, che si occupano di varie funzionalità tra cui il controllo e la sincronizzazione dei task e processori, la gestione della memoria e la mutua esclusione. Invece la gestione dello scheduling, dispatching e object management sono forniti dal executive core.
 \begin{figure} [h]
@@ -93,10 +91,10 @@ La figura successiva mostra la logica di utilizzo di RTEMS.
 
 Come si puo' notare RTEMS Executive è un intermediario tra il codice dell'applicativo e il target hardware, invece le dipendenze hardware con altri device sono localizzati nel livello "device drivers".
 Il RTEMS I/O manager incorpora queste dipendenze hardware nel sistema mentre allo stesso momento fornisce all'application code l'accesso ad esse.
-Queste dipendenze hardware sono isolate in specifiche BSP, Board Support Packages, per questo motivo il porting di un applicativo RTMES su altri processori è semplice poichè basterebbe selezionare la BSP del microprocessore su cui si vuol eseguire l'applicativo e compilare con le sue librerie.\\
+Queste dipendenze hardware sono isolate in specifiche BSP, Board Support Packages, per questo motivo il 'porting' di un applicativo RTMES su altri processori è semplice poichè basterebbe selezionare la BSP del microprocessore su cui si vuol eseguire l'applicativo e compilare con le sue librerie.\\
 In questo modo durante lo sviluppo di un applicativo real-time si ha la totale indipendenza dall'architettura dei microprocessori. \\
 
-E' disponibile il porting di RTEMS su molte architetture CPU tra cui ARM, MIPS, LEON,ERC32 e i PowerPC; durante il mio lavoro ho trattato il porting su architettura ARM utilizzando una Raspberry Pi 3B+.
+E' disponibile il 'porting' di RTEMS su molte architetture CPU tra cui ARM, MIPS, LEON,ERC32 e i PowerPC; durante il mio lavoro ho trattato il 'porting' su architettura ARM utilizzando una Raspberry Pi 3B+.
 \section{Raspberry Pi}
 \begin{figure}[h]
     \centering
@@ -149,12 +147,17 @@ Tutti i pin configurabili hanno un output da 0v a 3v3 e come input sono 3v3 'tol
 Eclipse è un IDE open source rilasciato con licenza EPL (Eclipse Public License) creato da IBM usato principalmente per la programmazione in Java ma grazie a vari plugin puo' essere usato per altri linguaggi di programmazione come C, C++, COBOL, Python e molti altri. \\
 L'ambiente di sviluppo Eclipse include l'Eclipse Java development tools per Java, e l'Eclipse CDT per C/C++. \\
 Per utilizzare RTEMS gcc cross compiler su Eclipse C, bisogna installare il plugin di RTEMS e settare le variabili di ambiente.
+\begin{figure} [h]
+    \centering
+    \includegraphics[height = 145mm, width = 160mm ]{eclipse-i2c.png}
+    \caption{Schermata Eclipse del programma I2C }
+    \label{fig:eclips-i2c}
+\end{figure}
 %TODO : aggiungere schermata con uno dei programmi che ho fatto
 \chapter{Porting di RTEMS su RPi}
 %Qui ci va sia l'attività di porting (download, versioni, organizzazione) fino alla prima prova, ed anche la definizione della "toolchain" per programmare in C e realizzare applicazioni RTEMS.
 
-
-L'attività di porting è la prima fase del lavoro e consiste in:
+L'attività di 'porting' è la prima fase del lavoro e consiste in:
 \begin{enumerate}
     \item Installazione dalla tool-suite sul computer host, dove vengono creati gli applicativi RTEMS.
     \item Verifica del corretto funzionamento della tool-suite, eseguendo i programmi di test su Raspberry Pi
@@ -164,23 +167,18 @@ L'attività di porting è la prima fase del lavoro e consiste in:
 Per svolgere tutta la procedura mi sono munito di un computer con sistema operativo Ubuntu, una scheda Raspberry Pi 3B+, una microsd, e convertitore TTL USB.\\
 %Tutta la procedura viene effettuata tramite comandi eseguiti su terminale.
 
-%Per poter eseguire l'attività è necessario avere un computer con sistema operativo Ubuntu 
-%(si potrebbe usare anche Windows o IOs ma con Ubuntu il procedimento è più semplice),
-%una scheda Raspberry Pi .\\
 RTEMS in sé è complesso per questo il team di RTEMS ci fornisce "l'ecosistema di RTEMS" che è una collezione di strumenti, packages, codici sorgente e documentazione, utile per definire come sviluppare, mantenere e usare RTEMS.\\
-Durante il porting ho utilizzato due importanti strumenti che fanno parte dell'ecosistema RTEMS, e sono :
+Durante il 'porting' ho utilizzato due importanti strumenti che fanno parte dell'ecosistema RTEMS, e sono :
 \begin{itemize}
     \item RTEMS RSB = l'RTEMS Source Builder è tool molto utile per compilare e buildare i moduli di RTEMS e delle BSP 
     \item BSP  raspberrypi = la Build Support Package è il codice di supporto, che contiene le librerie di RTEMS per una specifica scheda (ad esempio la BSP raspberrypi viene usata per la Raspberry Pi 3B+)
 \end{itemize}
-Dopo aver effettuato correttamente tutti i passaggi per il porting, ho creato una guida che li espone, in questo modo che qualunque utente voglia approcciarsi ad RTEMS su RPi per la prima volta riesca ad eseguirlo senza dover cercare tra le tante fonti sparse su internet.
+Dopo aver effettuato correttamente tutti i passaggi per il 'porting', ho creato una guida che li espone, in questo modo che qualunque utente voglia approcciarsi ad RTEMS su RPi per la prima volta riesca ad eseguirlo senza dover cercare tra le tante fonti sparse su internet.
 
 %TODO da capire se mettere come indice la guida del porting oppure nelle conclusioni con un elenco dei "prodotti" realizzati
 \chapter{Integrazione hardware e software}
 %Qui ci va una descrizione delle varie interfacce disponibili in termini di drivers SW e come le abbiamo provate.
-
-%RTEMS ha vari driver disponibili per l'utilizzo delle interfacce hardware
-Effettuato il porting sono passato all'attività software, cioè la creazione di RTEMS executive per testare il funzionamento delle RTEMS Classic API che sono le API per l'utilizzo delle interfacce. \\
+Effettuato il 'porting' sono passato all'attività software, cioè la creazione di RTEMS executive per testare il funzionamento delle RTEMS Classic API che sono le API per l'utilizzo delle interfacce. \\
 \begin{figure} [h]
 \centering
     \includegraphics[scale = 0.80] {RTEMS_architecture.JPG}
@@ -200,13 +198,12 @@ Le interfacce che ci interessano validare sono:
 ---\\
 TODO\\
 ----\\
-%Con l'attività di porting si è potuto verificare il funzionamento dell'interfaccia UART, come porta per i log di sistema che verranno utilizzati durante il debug degli applicativi RTEMS.
+%Con l'attività di 'porting' si è potuto verificare il funzionamento dell'interfaccia UART, come porta per i log di sistema che verranno utilizzati durante il debug degli applicativi RTEMS.
 
 \chapter{Attività sperimentale}
 \section{Obiettivi}
 %Nell'ambito dei sistemi embedded, e soprattutto nel settore spaziale, il risultato del software oltre al'esito computazionale dipende anche dal 
-Gli obiettivi dell'attività sperimentale sono:
-
+L'attività sperimentale consiste nella creazione di applicativi RTEMS per validare le API di RTEMS. Un API puo' essere considerata valida l'applicativo associato quando il comportamento del software è quello che ci aspettiamo e che venga fatto nell'arco temporale da noi definito.\\
 TODO
 %  Requisiti di validazione: cosa vogliamo provare, come e perchè. Ci sono degli agganci al mondo spaziale qui.
 
@@ -221,18 +218,26 @@ I componenti aggiuntivi sono :
     \item MCP4822 \cite{microchipMCP4822}: un DAC (Digital Analog Converter) controllato tramite protocollo SPI, montato sulla evaluation board sopracitata.
 \end{itemize}
 \newpage
-Il componente MPC3425 è un ADC da 16 bit che ha come input due tensioni $V_{IN}^+ $ e $ V_{IN}^-$ e come output una tensione pari a $V_{IN}^+ - V_{IN}^- \times PGA$. Il componente ha la seguente configurazione predefinita:
+Il componente \textbf{MPC3425} è un ADC da 16 bit che ha come input due tensioni $V_{IN}^+ $ e $ V_{IN}^-$ e come output una tensione pari a $V_{IN}^+ - V_{IN}^- \times PGA$.\\ 
+\begin{figure}[h]
+    \centering
+    \includegraphics{MCP3425.JPG}
+    \caption{MCP3425}
+    \label{fig:MCP3425}
+\end{figure}
+Il componente ha la seguente configurazione predefinita:
 \begin{itemize}
     \item Programmable Gain Amplifier(PGA) = 1
     \item Continuos Conversion
     \item Programmable Data Rate = 12 bit
 \end{itemize}
 Durante il lavoro viene utilizzata questa configurazione, ma nel caso si volesse cambiare la configurazione del componente, si puo' eseguire una scrittura di due byte dove il primo byte rappresenta l'indirizzo di periferica e il bit R/W (nel nostro caso è 11010000) invece il secondo contiene i bit di configurazione\\
+\newpage
 \begin{figure}[h]
     \centering
-    \includegraphics{wrtie_configuration_MCP3425.JPG}
+    \includegraphics[scale = 1]{wrtie_configuration_MCP3425.JPG}
     \caption{Diagramma temporale scrittura su MCP3425}
-    \label{fig:my_label4}
+    \label{fig:MCP3425_wrtie_conf}
 \end{figure}
 La lettura del valore in uscita dal DAC deve essere eseguita nel seguente modo:
 \begin{enumerate}
@@ -240,44 +245,133 @@ La lettura del valore in uscita dal DAC deve essere eseguita nel seguente modo:
     \item lettura dei due byte
     \item conversione dei byte per avere il valore effettivo della tensione
 \end{enumerate}
----\\
-TODO : DESCRIZIONE COMPONENTE MCP4822\\
----\\
-TODO: DESCRIZIONE CIRCUITI\\
----\\
+\newpage
+
+Il componente \textbf{MCP4822} è un DAC da 12 bit che ha come input il dato che viene passato da codice e come output una tensione pari a $V_{OUT} = \frac{V_{ref} \times D_n}{2^n} \times G$ dove:
+\begin{itemize}
+    \item $V_{ref}$ = 2.048V
+    \item $D_n$ = sono i bit che passo in input
+    \item $n$ = è il numero dei bit, cioè 12
+    \item $G$ = è il gain
+\end{itemize}
+
+\begin{figure}[h]
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=0.9\linewidth, height=5cm]{images/MCP4822.JPG} 
+\caption{MCP4822}
+\label{fig:MCP4822}
+\end{subfigure}
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=0.9\linewidth, height=5cm]{images/MCP4822_pin.JPG}
+\caption{MCP4822 pin}
+\label{fig:MCP4822 pin}
+\end{subfigure}
+\end{figure}
+
+Il componente ha due canali e la comunicazione è unidirezionale, cioè non puo' essere eseguita una lettura ma solo la scrittura mandando due byte in cui il primo è formato dai 4 bit di configurazione e 4 data bit, e il secondo è formato solo da data bit.
+
+
+\newpage
 \section{Test application software}
 La struttura principale che tutti i programmi seguono è la seguente:
 \begin{itemize}
     \item init.c = è il file sorgente contenente la funzione Init che è il punto di partenza dell'eseguibile. E' come se fosse il metodo main in Java.
     \item init.h = è un file header che contiene tutte le direttive RTEMS per configurare il sistema
     \item task\_helper.c = è il file sorgente contenente la definizione dei task, le funzioni per la manipolazione delle variabili globali, le funzioni aggiuntive 
-    \item task\_helper.h = è un file header che contiente tutte le dichiarazioni delle funzioni definite in task\_helper.c che si vogliono usare in init.c, ad esempio la definizione dei task.
+    \item task\_helper.h = è un file header che contiente tutte le dichiarazioni delle funzioni defi2
+Logs and output files
+nite in task\_helper.c che si vogliono usare in init.c, ad esempio la definizione dei task.
 \end{itemize}
+La configurazione del sistema viene definita tramite le direttive RTEMS, si puo' definire una configurazione di base che è formata dalle seguenti direttive:
+\begin{itemize}
+    \item CONFIGURE\_APPLICATION\_DOES\_NOT\_NEED\_CLOCK\_DRIVER
+    \item CONFIGURE\_APPLICATION\_NEEDS\_CLOCK\_DRIVER
+    \item CONFIGURE\_MICROSECONDS\_PER\_TICK n 
+    \item CONFIGURE\_APPLICATION\_NEEDS\_SIMPLE\_CONSOLE\_DRIVER
+    \item CONFIGURE\_UNLIMITED\_OBJECTS
+    \item CONFIGURE\_UNIFIED\_WORK\_AREAS
+    \item CONFIGURE\_RTEMS\_INIT\_TASKS\_TABLE
+    \item CONFIGURE\_INIT
+\end{itemize}
+sempre nel file init.h bisogna aggiungere la direttiva 
+\begin{lstlisting}[language = C]
+#include <rtems/confdefs.h>
 
+\end{lstlisting}
+\newpage
 %Architettura del programma di prova di un po' tutto
-Il programma di test del UART si tratta di un semplice "hello world!" è stato il più semplice da creare, poichè durante il porting è stato usato un programma di esempio simile per visualizzare i log di sistema. Dal codice sorgente dei programmi di esempio, come quelli per il ticker.img,  si puo' ipotizzare correttamente che per far stampare un messaggio sulla console è sufficiente definire la direttiva di sistema 
-\begin{lstlisting}
+Il primo programma di test che ho creato è quella per l'\textbf{interfaccia UART} e si tratta di un "hello world!". È stato il più semplice da creare, poichè durante il 'porting' è stato usato un programma di esempio simile per visualizzare i log di sistema. Dal codice sorgente dei programmi di esempio forniti da RTEMS, come quelli per il ticker.img,  si puo' ipotizzare correttamente che per far stampare un messaggio sulla console è sufficiente definire la direttiva di sistema 
+\begin{lstlisting}[language = C]
 #define CONFIGURE_APPLICATION_NEEDS_SIMPLE_CONSOLE_DRIVER 
 \end{lstlisting} 
 e usare le funzioni della libreria standard stdio.h 
-\begin{lstlisting}
+\begin{lstlisting} [language = C]
 printf("log"); 
 fflush(stdout);
 \end{lstlisting}
-L'interfaccia GPIO è stata testata con tre programmi per coprire le seguenti situazioni :
-\begin{itemize}
+ed ho come risultato:
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale = 0.5]{images/hello_world_log.png}
+    \caption{Hello world log}
+    \label{fig:hello_world_log}
+\end{figure}
+\newpage
+L'\textbf{interfaccia GPIO }è stata testata con tre programmi per coprire le seguenti situazioni :
+\begin{enumerate}
     \item accensione e spegnimento di un led ad intervalli di 1 secondo.
     \item alla pressione di un bottone si ha l'accesione o spegnimento di un led.
     \item alla pressione di un bottone, viene avviato un task.
+\end{enumerate}
+Per il \textbf{primo programma} il file init.c ha solo il task Init, dove è presente un ciclo infinito (while(1)) per il cambio di stato del LED e le API di RTEMS per la gestione del GPIO :
+\begin{itemize}
+    \item rtems\_gpio\_initialize() = 
+    \item rtems\_status\_code rtems\_gpio\_bsp\_select\_input(uint32\_t bank,uint32\_t pin,  void *bsp\_specific) =
+    \item uint32\_t rtems\_gpio\_bsp\_get\_value(uint32\_t bank, uint32\_t pin) =
+    \item rtems\_status\_code rtems\_gpio\_bsp\_clear(uint32\_t bank, uint32\_t pin) =
+    \item rtems\_status\_code rtems\_gpio\_bsp\_set(uint32\_t bank, uint32\_t pin) =
 \end{itemize}
+%Nel file header init.h per la configurazione di sistema ho impostato i microsecondi per ogni tick a 1000000 che equivale a 1 secondo per ogni tick
+Il \textbf{secondo programma} oltre a validare le API per l'interfaccia GPIO viene validato anche la gestione degli interrupts. Ho dovuto creare un circuito elettrico per poter generare un interrupt da pulsante e vedere la gestione tramite lo stato di un LED.\\
+TODO: AGGIUNGERE IMMAGINE CIRCUITO, SIA SCHEMA SIA FOTO\\
+Per la gestione degli interrupt ho utilizzato le API di RTEMS generiche che sono:
+\begin{itemize}
+    \item rtems\_status\_code rtems\_gpio\_request\_pin(uint32\_t pin\_number, rtems\_gpio\_function function, bool output\_enable, bool logic\_invert, void *bsp\_specific);
+    \item rtems\_status\_code rtems\_gpio\_resistor\_mode(
+  uint32\_t pin\_number,
+  rtems\_gpio\_pull\_mode mode
+);
+\item rtems\_status\_code rtems\_gpio\_enable\_interrupt(
+  uint32\_t pin\_number,
+  rtems\_gpio\_interrupt interrupt,
+  rtems\_gpio\_handler\_flag flag,
+  bool threaded\_handling,
+  rtems\_gpio\_irq\_state (*handler) (void *arg),
+  void *arg
+);
+\item rtems\_status\_code rtems\_gpio\_debounce\_switch(
+  uint32\_t pin\_number,
+  int ticks
+);
+\item uint32\_t rtems\_gpio\_bsp\_get\_value(uint32\_t bank, uint32\_t pin);
+\item rtems\_status\_code rtems\_gpio\_bsp\_clear(uint32\_t bank, uint32\_t pin);
+\item rtems\_status\_code rtems\_gpio\_bsp\_set(uint32\_t bank, uint32\_t pin);
+\end{itemize}
+In questo programma persiste il problema della gestione della sezione critica, in questo caso si presenta alla lettura e scrittura della variabile globale g\_led\_status, ed è stata risolta utilizzando gli eventi e un semaforo binario.\\
 ---\\
-TODO : DESCRIZIONE DEL PRIMO PROGRAMMA\\
+TODO: DESCRIZIONE SEMAFORO E EVENTI\\
+
 ---\\
-TODO: DESCRIZIONE DEL SECONDO PROGRAMMA, DESCRIVENDO COME è STATA GESTITA LA SEZIONE CRITICA\\
+TODO: DESCRIZIONE DEL TERZO PROGRAMMA, DESCRIVENDO LA GESTIONE DEI TASK (STATO DEL TASK) \\
+IL \textbf{terzo programma} è composto da due task:
+\begin{itemize}
+    \item btn\_polling
+    \item led\_blink 
+\end{itemize}
+Bisogna gestire lo stato dei task
+
 ---\\
-TODO: DESCRIZIONE DEL TERZO PROGRAMMA, DESCRIVENDO LA GESTIONE DEI TASK CON INTERRUPT\\
----\\
-L'interfaccia I2C è stata testata creando un programma che legge dal SDA l'output del componente ADC che manipolandolo come indicato dal datasheet mi da come risultato la tensione in entrata al ADC. Poichè bisogna utilizzare un componente aggiuntivo, ho dovuto creare il driver associato.\\
+L'interfaccia I2C è stata testata creando un programma che legge l'output del componente ADC che ,manipolandolo come indicato dal datasheet, mi da come risultato la tensione in entrata al ADC. Poichè bisogna utilizzare un componente aggiuntivo, ho dovuto creare il driver associato.\\
 ---\\
 TODO : DESCRIZIONE PROGRAMMA I2C E DEL DRIVER\\
 ---\\
@@ -300,3 +394,4 @@ Tutto il lavoro è stato svolto con l'aiuto dei membri di BIS-Italia e la collab
 \end{flushleft}
 
 \end{document}
+
