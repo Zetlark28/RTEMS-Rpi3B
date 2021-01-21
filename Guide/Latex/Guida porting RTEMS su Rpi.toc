@@ -5,5 +5,4 @@
 \contentsline {section}{\numberline {5}Configurazione Eclipse C/C++}{7}{section.5}%
 \contentsline {section}{\numberline {6}Prova con Eclipse C/C++}{10}{section.6}%
 \contentsline {section}{\numberline {7}Creazione file kernel senza IDE}{11}{section.7}%
-\contentsline {section}{\numberline {8}Troubleshooting}{12}{section.8}%
-\contentsline {section}{\numberline {9}Sitografia}{13}{section.9}%
+\contentsline {section}{\numberline {8}Sitografia}{12}{section.8}%

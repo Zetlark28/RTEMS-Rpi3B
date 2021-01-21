@@ -1,6 +1,9 @@
-\documentclass[10pt, a4paper]{article}
+\documentclass[12pt, a4paper]{article}
 \usepackage{geometry}
 \usepackage{graphicx}
+\usepackage{mathptmx} %set font type = times 
+ \pagestyle{plain} 
+
 
  \geometry{
  a4paper,
@@ -24,10 +27,6 @@
 \begin{document}
 \pagenumbering{gobble}
 \maketitle
-\newpage
-\tableofcontents
-\newpage
-\pagenumbering{arabic}
 \begin{flushleft}
 \section{Introduzione}
 Guida per l'installazione di RTEMS RSB e della tool-suite per l' utilizzo del kernel di RTEMS su architetture ARM, con target i BSP di Raspberry Pi 1 e Raspberry Pi 2, quest'ultimo è compatibile con la Raspberry pi 3.
@@ -39,7 +38,6 @@ La BSP (Board Support Package) è il codice di supporto per una specifica scheda
 RTEMS è un progetto open source in perenne sviluppo, al momento stanno sviluppando la v6 ma non è ancora stabile, e al momento della redazione di questa guida si installerà la v5.1 che è release stabile più recente.
 
 In questa guida viene usato il sistema operativo Ubuntu LTS 20.04.
-
 \newpage
 \section{Configurazione iniziale del sistema}
 Prima di iniziare l'installazione di RTEMS RSB e della tool-suite bisogna configurare l'ambiente di sviluppo.
@@ -59,7 +57,6 @@ $ sudo apt-get install git
  $ sudo apt-get install python-dev
  \end{lstlisting}
 \end{itemize}
-
 A questo punto definiamo la struttura delle cartelle in cui verranno installati i componenti di RTEMS.
 
 \begin{itemize}
@@ -87,7 +84,8 @@ $ git clone -b 5.1 git://git.rtems.org/rtems.git
 \item Eseguiamo la build e l'installazione della tool suite utilizzando la RSB :
 \begin{lstlisting}[language=bash] 
 $ cd $HOME/rtems-dev/src/rsb/rtems
-$ ../source-builder/sb-set-builder --prefix= $HOME/rtems-dev/rtems/5 5/rtems-arm
+$ ../source-builder/sb-set-builder --prefix= $HOME/rtems-dev/rtems/5 \
+  5/rtems-arm
 \end{lstlisting}
 
 \item Dopo aver completato l'installazione possiamo controllare che il C cross compiler di RTEMS sia stato installato correttamente utilizzando il seguente comando: 
@@ -159,13 +157,13 @@ generare il file .img:
 
 Per Rpi1: 
 \begin{lstlisting}[language=bash] 
-$ arm-rtems5-objcopy -Obinary $HOME/rtems-dev/build/arm-rtems5/c/raspberrypi1/ 
-testsuites/samples/ticker.exe ticker.img
+$ arm-rtems5-objcopy -Obinary $HOME/rtems-dev/build/arm-rtems5/c 
+  /raspberrypi1/testsuites/samples/ticker.exe ticker.img
 \end{lstlisting}
 Per Rpi2 e Rpi3: 
 \begin{lstlisting}[language=bash ] 
-$ arm-rtems5-objcopy -Obinary $HOME/rtems-dev/build/arm-rtems5/c/raspberrypi2/
-testsuites/samples/ticker.exe ticker.img
+$ arm-rtems5-objcopy -Obinary $HOME/rtems-dev/build/arm-rtems5/c
+  /raspberrypi2/testsuites/samples/ticker.exe ticker.img
 \end{lstlisting}
 
 \item Configurare la SD card:
@@ -207,7 +205,7 @@ dove i GPIO pin sono :
 Colleghiamo la chiaveta USB al computer ed eseguiamo il comando per vedere la log della UART :
 \begin{lstlisting}[language=bash] 
 $ sudo minicom -b 115200 -D /dev/serial/
-by-id/<indirizzo periferica utilizzata per UART di solito un USB TTL>
+  by-id/<indirizzo periferica utilizzata per UART di solito un USB TTL>
 \end{lstlisting}
 
 il risultato dovrebbe essere simile a questo:
@@ -242,7 +240,7 @@ Quando creiamo un progetto RTEMS bisogna configurare la base e il BSP path di RT
 \item BSP path : path dell'installazione della BSP, nel nostro caso home/<username>/rtems-dev/rtems/5/arm-rtems5/raspberrypi2 (o 1 se si utilizza Rpi1)
 \end{itemize}
 
-\begin{figure}[h!]
+\begin{figure}[h]
 \includegraphics[width=\linewidth]{rtems-path-eclipse.png}
 \end{figure}
 
@@ -269,10 +267,7 @@ creiamo 2 file sorgenti:
 
 in init.c inseriamo il seguente codice:
 \begin{lstlisting}[language=c] 
-
-/*
- * Hello world example
- */
+/* Hello world example*/
 #include <rtems.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -291,9 +286,7 @@ in system.c inseriamo il seguente codice :
 
 \begin{lstlisting}[language=c] 
 
-/*
- * Simple RTEMS configuration
- */
+/* Simple RTEMS configuration */
 
 #define CONFIGURE_APPLICATION_DOES_NOT_NEED_CLOCK_DRIVER
 #define CONFIGURE_APPLICATION_NEEDS_SIMPLE_CONSOLE_DRIVER
@@ -328,24 +321,22 @@ Se si vuole creare il file .img partendo dai file sorgente allora dobbiamo usare
  $ $HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc -B \
    $HOME/rtems-dev/rtems/5/arm-rtems5/raspberrypi2/lib/ \
    -specs bsp_specs -qrtems -ffunction-sections -fdata-sections \
-   -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard -mtune=cortex-a7 \
-   -Os -g -Wall -c -fmessage-length=0 -pipe -MMD -MP -MF"init.d" \
-   -MT"init.o" -o "init.o" "../init.c"
+   -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard \ 
+   -mtune=cortex-a7 -Os -g -Wall -c -fmessage-length=0 -pipe -MMD \
+   -MP -MF"init.d" -MT"init.o" -o "init.o" "../init.c"
 \end{lstlisting}
 \item utilizziamo il linker per la creazione del file .exe :
 \begin{lstlisting}[language= bash] 
 $ $HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc -B \
   $HOME/rtems-dev/rtems/5/arm-rtems5/raspberrypi2/lib/ \
   -specs bsp_specs -qrtems -ffunction-sections -fdata-sections \
-  -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard -mtune=cortex-a7 \
-  -Wl,--gc-sections -o "hello-rpi.exe"  ./init.o ./system.o    
+  -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard \ 
+  -mtune=cortex-a7 -Wl,--gc-sections \ 
+  -o "hello-rpi.exe"  ./init.o ./system.o    
 \end{lstlisting}
 
 \end{itemize}
 \item a questo punto possiamo creare il file .img e copiarlo sulla scheda sd e fare i passaggi già esposti precedentemente.
-
-\newpage
-\section{Troubleshooting}
 
 \newpage
 \section{Sitografia}

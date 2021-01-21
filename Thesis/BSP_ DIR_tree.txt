@@ -1,0 +1,46 @@
+raspberrypi
+├── lib
+│   ├── include
+│   │   ├── rtems.h
+│   │   ├── bsp.h
+│   │   ├── bsp
+│   │   │   ├── raspberrypi.h
+│   │   │   ├── gpio.h
+│   │   │   ├── rpi-gpio.h
+│   │   │   ├── irq.h
+│   │   │   ├── irq-generic.h
+│   │   │   ├── i2c.h
+│   │   │   ├── spi.h
+│   │   │   └──...
+│   │   ├── rtems
+│   │   │   ├── confdefs.h
+│   │   │   ├── rtems
+│   │   │   │   ├── sem.h
+│   │   │   │   ├── tasks.h
+│   │   │   │   ├── event.h
+│   │   │   │   ├── libi2c.h
+│   │   │   │   └──...
+│   │   │   ├── watchdogdrv.h
+│   │   │   └── .... 
+│   │   ├── dev
+│   │   │   ├── i2c
+│   │   │   │   ├── i2c.h
+│   │   │   │   └── ...
+│   │   │   ├── spi
+│   │   │   │    └── spi.h
+│   │   │   └── ...
+│   │   ├── linux
+│   │   │   ├── i2c-dev.h
+│   │   │   ├── i2c.h
+│   │   │   └── spi
+│   │   │       └── spidev.h
+│   │   ├── libchip
+│   │   │   └──....
+│   │   │
+│   │   └──...
+│   └── ...
+├── make
+│   └── ...
+└── Makefile.inc
+
+40 directories, 768 files
