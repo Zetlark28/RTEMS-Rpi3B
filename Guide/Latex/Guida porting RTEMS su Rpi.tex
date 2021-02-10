@@ -4,7 +4,52 @@
 \usepackage{mathptmx} %set font type = times 
  \pagestyle{plain} 
 
+\usepackage{listings}
 
+\usepackage{xcolor}
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{BashStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=bash
+}
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
  \geometry{
  a4paper,
  total={170mm,257mm},
@@ -22,7 +67,6 @@
 \author{Clark Ezpeleta}
 \date{}
 \usepackage{parskip}
-\usepackage{listings}
 
 \begin{document}
 \pagenumbering{gobble}
@@ -45,7 +89,7 @@ Prima di iniziare l'installazione di RTEMS RSB e della tool-suite bisogna config
 Procediamo con l'installazione dei seguenti packages:
 \begin{itemize}
 \item  build-essential : 
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ sudo apt-get install build-essential
 \end{lstlisting}
 \item git:
@@ -53,7 +97,7 @@ $ sudo apt-get install build-essential
 $ sudo apt-get install git
 \end{lstlisting}
 \item python-dev:
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
  $ sudo apt-get install python-dev
  \end{lstlisting}
 \end{itemize}
@@ -74,7 +118,7 @@ Dopo aver preparato l'ambiente di sviluppo, possiamo procedere con l'installazio
 \begin{itemize}
 
 \item Cloniamo i repository del RTEMS RSB e del codice sorgente di RTEMS : 
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ mkdir - p $HOME/rtems-dev/src
 $ cd $HOME/rtems-dev/src
 $ git clone -b 5.1 git://git.rtems.org/rtems-source-builder.git rsb
@@ -82,14 +126,14 @@ $ git clone -b 5.1 git://git.rtems.org/rtems.git
 \end{lstlisting}
 
 \item Eseguiamo la build e l'installazione della tool suite utilizzando la RSB :
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ cd $HOME/rtems-dev/src/rsb/rtems
 $ ../source-builder/sb-set-builder --prefix= $HOME/rtems-dev/rtems/5 \
   5/rtems-arm
 \end{lstlisting}
 
 \item Dopo aver completato l'installazione possiamo controllare che il C cross compiler di RTEMS sia stato installato correttamente utilizzando il seguente comando: 
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ $HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc --version
 \end{lstlisting}	
 e si ha come risultato:
@@ -98,14 +142,14 @@ e si ha come risultato:
 \end{figure}
 
 \item Inseriamo nelle variabili di ambiente i comandi della toolchain e procediamo con il bootstrap : 
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ export PATH=$HOME/rtems-dev/rtems/5/bin:"$PATH" (3.1)
 $ cd $HOME/rtems-dev/src/rtems
 $ ./rtems-bootstrap
 \end{lstlisting}	
 	
 \item Adesso possiamo configurare ed installare le BSP che ci servono: 
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ mkdir -p $HOME/rtems-dev/build
 $ cd $HOME/rtems-dev/build
 $ $HOME/rtems-dev/src/rtems/configure \
@@ -128,11 +172,11 @@ Installando le BSP, RTEMS ci fornisce dei sample test .exe da cui possiamo gener
 I sample test sono in : 
 \begin{itemize}
 \item  rpi 1:
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ $HOME/rtems-dev/build/arm-rtems5/c/raspberrypi1/testsuites/samples
 \end{lstlisting}
 \item  rpi 2 e 3:
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ $HOME/rtems-dev/build/arm-rtems5/c/raspberrypi2/testsuites/samples
 \end{lstlisting}
 \end{itemize}
@@ -143,25 +187,25 @@ Per poter utilizzare il sample test dobbiamo fare 2 passaggi:
 \item Creazione kernel file .img:
 
 assicurarsi di avere come variabile di ambiente i comandi della tool-suite:
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ echo $PATH
 \end{lstlisting}
 se non è presente  '\$HOME/rtems-dev/rtems/5/bin' allora bisogna inserirla (vedi comando 3.1).
 
 posizionarsi nella cartella dove vogliamo che venga creato il file .img:
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ cd $HOME/rtems-dev/rtems 
 \end{lstlisting}		
 
 generare il file .img:
 
 Per Rpi1: 
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ arm-rtems5-objcopy -Obinary $HOME/rtems-dev/build/arm-rtems5/c 
   /raspberrypi1/testsuites/samples/ticker.exe ticker.img
 \end{lstlisting}
 Per Rpi2 e Rpi3: 
-\begin{lstlisting}[language=bash ] 
+\begin{lstlisting}[style=BashStyle ] 
 $ arm-rtems5-objcopy -Obinary $HOME/rtems-dev/build/arm-rtems5/c
   /raspberrypi2/testsuites/samples/ticker.exe ticker.img
 \end{lstlisting}
@@ -174,7 +218,7 @@ Eliminiamo tutti i file kernel*.img, questi verranno sostituiti dal file
 kernel che abbiamo generato precedentemente.
 Copiamo nella sd il file ticker.img creato precendetemente.
 Creiamo nella sd il file config.txt che contiene il seguente testo:
-\begin{lstlisting}[language=bash ] 
+\begin{lstlisting}[style=BashStyle ] 
 		enable_uart=1
 		kernel_address=0x200000
  		kernel=ticker.img 
@@ -187,7 +231,7 @@ Nel campo kernel mettiamo il nome del kernel file che vogliamo che rpi esegua.
 A questo punto siamo pronti con il test.
 
 Per poter vedere la log della UART dobbiamo installare minicom:
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ sudo apt-get install minicom
 \end{lstlisting}
 
@@ -203,7 +247,7 @@ dove i GPIO pin sono :
 
 \newpage
 Colleghiamo la chiaveta USB al computer ed eseguiamo il comando per vedere la log della UART :
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ sudo minicom -b 115200 -D /dev/serial/
   by-id/<indirizzo periferica utilizzata per UART di solito un USB TTL>
 \end{lstlisting}
@@ -266,7 +310,7 @@ creiamo 2 file sorgenti:
 - system.c : conterrà il codice di configurazione di RTEMS.
 
 in init.c inseriamo il seguente codice:
-\begin{lstlisting}[language=c] 
+\begin{lstlisting}[style=CStyle] 
 /* Hello world example*/
 #include <rtems.h>
 #include <stdlib.h>
@@ -284,7 +328,7 @@ rtems_task Init(rtems_task_argument ignored) {
 \end{lstlisting}
 in system.c inseriamo il seguente codice :
 
-\begin{lstlisting}[language=c] 
+\begin{lstlisting}[style=CStyle] 
 
 /* Simple RTEMS configuration */
 
@@ -317,7 +361,7 @@ Se si vuole creare il file .img partendo dai file sorgente allora dobbiamo usare
 \begin{itemize}
 \item ci posizioniamo nella cartella dove ci sono i file sorgenti.
 \item eseguiamo i comandi del cross compiler di RTEMS su tutti i file .c: 
-\begin{lstlisting}[language= bash] 
+\begin{lstlisting}[style=BashStyle] 
  $ $HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc -B \
    $HOME/rtems-dev/rtems/5/arm-rtems5/raspberrypi2/lib/ \
    -specs bsp_specs -qrtems -ffunction-sections -fdata-sections \
@@ -326,7 +370,7 @@ Se si vuole creare il file .img partendo dai file sorgente allora dobbiamo usare
    -MP -MF"init.d" -MT"init.o" -o "init.o" "../init.c"
 \end{lstlisting}
 \item utilizziamo il linker per la creazione del file .exe :
-\begin{lstlisting}[language= bash] 
+\begin{lstlisting}[style=BashStyle] 
 $ $HOME/rtems-dev/rtems/5/bin/arm-rtems5-gcc -B \
   $HOME/rtems-dev/rtems/5/arm-rtems5/raspberrypi2/lib/ \
   -specs bsp_specs -qrtems -ffunction-sections -fdata-sections \

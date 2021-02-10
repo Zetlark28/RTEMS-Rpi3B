@@ -1,0 +1,6 @@
+Buongiorno mi chiamo Clark Ezpeleta e la mia relazione è intitolata "RTEMS su Raspberry Pi per applicazioni real-time".
+Questa attività di stage mi è stata proposta dal'ingegnere Bernardini, rappresentante della BIS-Italia, fazione italiana della British Interplanetary Society che si occupa di divulgazione spaziale,
+e  dal professor Sorrenti.
+Ho scelto di svolgere questa attività poichè tratta di sistemi embedded, ed si basa su RTEMS, sistema operativo real-time validato dall'ESA, European-Space Agency, utilizzato su una scheda 
+comune che è la Raspberry Pi.
+Cosa vuol dire vaildare?
