@@ -1,0 +1,44 @@
+
+Percorso discorso:
+- Presentazione iniziale
+- Perchè ho voluto fare questo tirocinio
+- Obiettivi
+- Spiegazione RTEMS 
+- Componenti hardware utilizzati (RaspberryPi e una sintesi dei componenti Microchip)
+- Porting
+- Applicazioni
+- Problematiche
+- Conclusione 
+
+Slide:
+- Copertina
+- Obiettivi
+- RTEMS
+- Componenti Hardware
+- Porting 
+- Applicativi di validazione
+- Problematiche
+- Risultati finali
+- Conclusione
+
+Discorso Appello di laurea
+
+Salve a tutta la commissione,
+sono Clark Ezpeleta e la mia tesi si basa sulla mia esperienza di tirocinio intitolato: RTEMS su Raspberry Pi per applicazioni real-time, che mi ha proposto la BIS-Italia 
+che è la sezione italiana della British Interplanetary Society, e che il prof. Sorrenti mi ha permesso di "portare".
+Ho deciso di svolgere questo tirocinio perchè, oltre ad essere membro dell'associazione, viene trattato un sistema operativo utilizzato nel settore spaziale,
+ovvero RTEMS che verrà utilizzato in uno dei progetti della BIS-Italia.
+
+RTEMS sta per Real-Time Executive MultiProcessor System ed `e un sistema operativo real-time general purpose open source,progettato e gestito da OAR Corporation. Il suo sviluppo inizi`o nella fine
+Venne utilizzato inizialmente per scopi militari, ma attualmente viene utilizzato in molti settori tra cui quello aerospaziale, infatti `e
+stato utilizzato in alcune missioni spaziali sia a livello di on-board computer che come computer embedded in altre attività di volo.
+RTEMS `e stato validato dall’ESA, European Space Agency, ciò vuol dire che sono stati scritti dei programmi che riproducono gli scenari critici (ad esempio
+la gestione di molti dispositivi oppure la gestione e l’esecuzione concorrente dei task), e sono stati eseguiti sul sistema operativo per poter verificare il suo corretto
+funzionamento in quei casi. La validazione viene tutt’ora aggiornata poichè `e un
+sistema operativo che è in continua evoluzione e avrà più funzionalità con il passare
+del tempo. Attualmente è in sviluppo la versione 6V
+RTEMS non `e un sistema operativo a sè stante, usato per caricare altri programmi,
+ma `e un executive che viene compilato con l’applicazione in un unico codice
+monolitico da eseguire.
+RTEMS `e usato per applicazioni categoria 13 (mission critical) in molti veicoli
+spaziali della NASA e dell’ESA
