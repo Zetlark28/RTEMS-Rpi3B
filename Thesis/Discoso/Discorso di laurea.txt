@@ -2,7 +2,7 @@
 Percorso discorso:
 - Presentazione iniziale
 - Perchè ho voluto fare questo tirocinio
-- Obiettivi
+- Obiettivi finalità
 - Spiegazione RTEMS 
 - Componenti hardware utilizzati (RaspberryPi e una sintesi dei componenti Microchip)
 - Porting
@@ -11,15 +11,18 @@ Percorso discorso:
 - Conclusione 
 
 Slide:
-- Copertina
-- Obiettivi
-- RTEMS
-- Componenti Hardware
-- Porting 
-- Applicativi di validazione
-- Problematiche
-- Risultati finali
-- Conclusione
+1- Copertina
+2- Obiettivi e finalità
+3- RTEMS
+4- RPi
+5- Porting 
+6- Le interfacce che ci interessano validare
+7- Struttura programma di prova RTEMS
+8- I2C
+9- SPI 
+10- Compilazione, caricamento, esecuzione e verifica
+11- Risultati 
+12- Conclusione
 
 Discorso Appello di laurea
 
